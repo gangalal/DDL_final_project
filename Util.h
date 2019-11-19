@@ -1,17 +1,27 @@
-#ifndef UTIL_H
-#define UTIL_H
+/*
+ * Util.h
+ *
+ *  Created on: Nov 13, 2019
+ *      Author: ganga
+ */
+
+#ifndef UTIL_H_
+#define UTIL_H_
 
 #include <stdio.h>
-#include <errno.h>
 #include <string.h>
 #include <time.h>
 
 #define false 0
 #define true 1
 
+#define low 0
+#define high 1
+
+
 
 // This only works for C
-static const char *  currentTime () {
+ char *  currentTime () {
   time_t rawtime;
   struct tm * timeinfo;
 
@@ -19,37 +29,15 @@ static const char *  currentTime () {
   timeinfo = localtime (&rawtime);
   char * thetime = asctime(timeinfo);
   thetime[strlen(thetime)-1] = '\0';
-  return (const char *) thetime;
+  return thetime;
 }
 
 // What is the current time
-#define DATE_STRING currentTime()
+#define DATE_STRING currentTime ()
 
-#define clean_errno() (errno == 0 ? "None" : strerror(errno))
+#define log_err(M, ...) printf("%s | " M "\n", DATE_STRING)
 
-// Add code the only works if the debug flag is thrown
-#ifdef DEBUG
-#define debug(M, ...) fprintf(stderr, "DEBUG %s:%d: " M "\n", __FILE__, __LINE__, ##__VA_ARGS__)
-#else
-#define debug(M, ...)
-#endif
-
-
-// If using clang, enable the -Wno-gnu-zero-variadic-macro-arguments
-// for no errors
-#define log_trace(M, ...) fprintf(stderr, "%s [trace] (%s:%d) | " M "\n", DATE_STRING,  __FILE__, __LINE__, ##__VA_ARGS__)
-
-#define log_debug(M, ...) fprintf(stderr, "%s [debug] (%s:%d) | " M "\n", DATE_STRING,  __FILE__, __LINE__, ##__VA_ARGS__)
-
-#define log_info(M, ...) fprintf(stderr, "%s [info] (%s:%d) | " M "\n", DATE_STRING,  __FILE__, __LINE__, ##__VA_ARGS__)
-
-#define log_err(M, ...) fprintf(stderr, "%s [error] (%s:%d: errno: %s) | " M "\n", DATE_STRING, __FILE__, __LINE__, clean_errno(), ##__VA_ARGS__)
-
-#define log_warn(M, ...) fprintf(stderr, "%s [warn] (%s:%d: errno: %s) | " M "\n", DATE_STRING, __FILE__, __LINE__, clean_errno(), ##__VA_ARGS__)
+#define debug(M, ...) printf("       __debug__   \n")
 
 #define check_mem(A) check((A), "Out of memory.")
-
-#define log_timer(tic, toc, M, ...) fprintf(stderr, "%s [INFO] (%s:%d) | " M " (%lf msecs) \n", DATE_STRING,  __FILE__, __LINE__, ##__VA_ARGS__, 1000.0*(toc-tic)/CLOCKS_PER_SEC)
-
-
-#endif // UTIL_H
+#endif /* UTIL_H_ */
