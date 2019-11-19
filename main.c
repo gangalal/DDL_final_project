@@ -120,7 +120,7 @@ int main(void) {
 
 	//configMIDI();
 	while (1) {
-		configT2MR3(550);
+		//configT2MR3(550);
 
 		//debug();
 
