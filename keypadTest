@@ -156,6 +156,17 @@ void checkKeyRow4(void) {
 	}
 	FIO0PIN &= ~(1 << 18);
 }
+
+/*
+ * Scan for pressed key
+ */
+void keyScan() {
+	
+    checkKeyRow1();
+    checkKeyRow2();
+    checkKeyRow3();
+    checkKeyRow4();
+}
 /*
  *
  */
@@ -165,10 +176,7 @@ int main(void) {
 
 	while(1) {
 		
-        checkKeyRow1();
-        checkKeyRow2();
-        checkKeyRow3();
-        checkKeyRow4();
+		keyScan();
         
     }
     return 0 ;
