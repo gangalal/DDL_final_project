@@ -26,9 +26,9 @@
  * keyTable[row*4 + column]
  */
 char keyTable[] = 	"1 2 3 A"
-			"4 5 6 B"
-			"7 8 9 C"
-			"* 0 # D";
+					"4 5 6 B"
+					"7 8 9 C"
+					"* 0 # D";
 
 /*
  * If we use this method - we have to be CAREFUL with syntax!
@@ -37,9 +37,9 @@ char keyTable[] = 	"1 2 3 A"
  * Jessica prefers this method - can see EXACTLY what you need right away
  */
 char otherKeyTable[] = {{'1','2','3','A'},
-			{'4','5','6','B'},
-			{'7','8','9','C'},
-			{'*','0','#','D'}};
+						{'4','5','6','B'},
+						{'7','8','9','C'},
+						{'*','0','#','D'}};
 
 /*
  * Initialize pins as inputs and outputs, initialize pull-up/pull-down resistors
@@ -72,7 +72,7 @@ void initIO(void) {
 /*
  * Determine if a key in Row 1 has been pressed and prints test statement
  */
-void checkKeyRow1(void) {
+void checkRow1(void) {
 	
 	/*
 	 * Set Row 1 high, the rest low
@@ -81,6 +81,7 @@ void checkKeyRow1(void) {
 	FIO0PIN &= ~(1 << 0);
 	FIO0PIN &= ~(1 << 1);
 	FIO0PIN &= ~(1 << 18);
+	wait_us(250);
 
 	/*
 	 * Scan each Column input for high value
@@ -102,13 +103,14 @@ void checkKeyRow1(void) {
 	 * Set Row 1 low
 	 */
 	FIO0PIN &= ~(1 << 6);
+	wait_us(250);
 
 }
 
 /*
  * Determine if a key in Row 2 has been pressed and prints test statement
  */
-void checkKeyRow2(void) {
+void checkRow2(void) {
 	
 	/*
 	 * Set Row 2 high, the rest low
@@ -117,6 +119,7 @@ void checkKeyRow2(void) {
 	FIO0PIN &= ~(1 << 6);
 	FIO0PIN &= ~(1 << 1);
 	FIO0PIN &= ~(1 << 18);
+	wait_us(250);
 
 	/*
 	 * Scan each Column input for high value
@@ -138,13 +141,14 @@ void checkKeyRow2(void) {
 	 * Set Row 2 low
 	 */
 	FIO0PIN &= ~(1 << 0);
+	wait_us(250);
 
 }
 
 /*
  * Determine if a key in Row 3 has been pressed and prints test statement
  */
-void checkKeyRow3(void) {
+void checkRow3(void) {
 	
 	/*
 	 * Set Row 3 high, the rest low
@@ -153,6 +157,7 @@ void checkKeyRow3(void) {
 	FIO0PIN &= ~(1 << 6);
 	FIO0PIN &= ~(1 << 0);
 	FIO0PIN &= ~(1 << 18);
+	wait_us(250);
 	
 	/*
 	 * Scan each Column input for high value
@@ -174,13 +179,14 @@ void checkKeyRow3(void) {
 	 * Set Row 3 low
 	 */
 	FIO0PIN |= (1 << 1);
+	wait_us(250);
 
 }
 
 /*
  * Determine if a key in Row 4 has been pressed and prints test statement
  */
-void checkKeyRow4(void) {
+void checkRow4(void) {
 	
 	/*
 	 * Set Row 4 high, the rest low
@@ -189,6 +195,7 @@ void checkKeyRow4(void) {
 	FIO0PIN &= ~(1 << 6);
 	FIO0PIN &= ~(1 << 0);
 	FIO0PIN &= ~(1 << 1);
+	wait_us(250);
 	
 	/*
 	 * Scan each Column input for high value
@@ -210,18 +217,22 @@ void checkKeyRow4(void) {
 	 * Set Row 4 low
 	 */
 	FIO0PIN &= ~(1 << 18);
+	wait_us(250);
 
 }
 
 /*
  * Scan for pressed key
+ * We can combine the checkRow functions if we want to - kept it separate until
+ * we determine which rows we will be using. This will depend on how many
+ * functions we end up needing to use on the keypad.
  */
 void keyScan() {
 
-	checkKeyRow1();
-	checkKeyRow2();
-	checkKeyRow3();
-	checkKeyRow4();
+	checkRow1();
+	checkRow2();
+	checkRow3();
+	checkRow4();
 
 }
 /*
