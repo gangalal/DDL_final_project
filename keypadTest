@@ -70,7 +70,11 @@ void initIO(void) {
 
 void checkKeyRow1(void) {
 	
-	FI0PIN |= (1 << 6);
+	FIO0PIN |= (1 << 6);	// Set Row 1 high
+	FIO0PIN &= ~(1 << 0);
+	FIO0PIN &= ~(1 << 1);
+	FIO0PIN &= ~(1 << 18);
+
 	if (((FIO0PIN >> 17) & 0x01) == 1) {
 		printf('You have pressed 1.');
 	}
@@ -88,8 +92,12 @@ void checkKeyRow1(void) {
 
 void checkKeyRow2(void) {
 	
-	FI0PIN |= (1 << 0);
 	
+	FIO00PIN |= (1 << 0);	// Set Row 2 high
+	FIO0PIN &= ~(1 << 6);
+	FIO0PIN &= ~(1 << 1);
+	FIO0PIN &= ~(1 << 18);
+
 	if (((FIO0PIN >> 17) & 0x01) == 1) {
 		printf('You have pressed 4.');
 	}
@@ -107,7 +115,10 @@ void checkKeyRow2(void) {
 
 void checkKeyRow3(void) {
 	
-	FIO0PIN |= (1 << 1);
+	FIO0PIN |= (1 << 1);	// Set Row 3 high
+	FIO0PIN &= ~(1 << 6);
+	FIO0PIN &= ~(1 << 0);
+	FIO0PIN &= ~(1 << 18);
 	
 	if (((FIO0PIN >> 17) & 0x01) == 1) {
 		printf('You have pressed 7.');
@@ -126,7 +137,10 @@ void checkKeyRow3(void) {
 
 void checkKeyRow4(void) {
 	
-	FIO0PIN |= (1 << 18);
+	FIO0PIN |= (1 << 18);	// Set Row 4 high
+	FIO0PIN &= ~(1 << 6);
+	FIO0PIN &= ~(1 << 0);
+	FIO0PIN &= ~(1 << 1);
 	
 	if (((FIO0PIN >> 17) & 0x01) == 1) {
 		printf('You have pressed *.');
