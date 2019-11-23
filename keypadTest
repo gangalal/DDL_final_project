@@ -4,7 +4,7 @@
  Author      : Jessica Horner
  Version     : Alpha
  Copyright   : $(copyright)
- Description : main definition
+ Description : ** Needs description still **
 ===============================================================================
 */
 
@@ -45,7 +45,7 @@ char otherKeyTable[] = {{'1','2','3','A'},
  * Initialize pins as inputs and outputs, initialize pull-up/pull-down resistors
  */
 void initIO(void) {
-
+	
 	/*
 	 * Set pins 8-11 as outputs - "rows"
 	 * Set pins 12-15 as inputs - "columns"
@@ -66,16 +66,25 @@ void initIO(void) {
 	FIO0PIN &= ~(1 << 0);
 	FIO0PIN &= ~(1 << 1);
 	FIO0PIN &= ~(1 << 18);
+
 }
 
+/*
+ * Determine if a key in Row 1 has been pressed and prints test statement
+ */
 void checkKeyRow1(void) {
 	
-	FIO0PIN |= (1 << 6);	// Set Row 1 high, the rest low
+	/*
+	 * Set Row 1 high, the rest low
+	 */
+	FIO0PIN |= (1 << 6);
 	FIO0PIN &= ~(1 << 0);
 	FIO0PIN &= ~(1 << 1);
 	FIO0PIN &= ~(1 << 18);
 
-	// Scan each Column input for high value
+	/*
+	 * Scan each Column input for high value
+	 */
 	if (((FIO0PIN >> 17) & 0x01) == 1) {
 		printf('You have pressed 1.');
 	}
@@ -88,18 +97,30 @@ void checkKeyRow1(void) {
 	if (((FIO0PIN >> 23) & 0x01) == 1) {
 		printf('You have pressed A.');
 	}
+
+	/*
+	 * Set Row 1 low
+	 */
 	FIO0PIN &= ~(1 << 6);
+
 }
 
+/*
+ * Determine if a key in Row 2 has been pressed and prints test statement
+ */
 void checkKeyRow2(void) {
 	
-	
-	FIO00PIN |= (1 << 0);	// Set Row 2 high, the rest low
+	/*
+	 * Set Row 2 high, the rest low
+	 */
+	FIO00PIN |= (1 << 0);
 	FIO0PIN &= ~(1 << 6);
 	FIO0PIN &= ~(1 << 1);
 	FIO0PIN &= ~(1 << 18);
 
-	// Scan each Column input for high value
+	/*
+	 * Scan each Column input for high value
+	 */
 	if (((FIO0PIN >> 17) & 0x01) == 1) {
 		printf('You have pressed 4.');
 	}
@@ -112,17 +133,30 @@ void checkKeyRow2(void) {
 	if (((FIO0PIN >> 23) & 0x01) == 1) {
 		printf('You have pressed B.');
 	}
+
+	/*
+	 * Set Row 2 low
+	 */
 	FIO0PIN &= ~(1 << 0);
+
 }
 
+/*
+ * Determine if a key in Row 3 has been pressed and prints test statement
+ */
 void checkKeyRow3(void) {
 	
-	FIO0PIN |= (1 << 1);	// Set Row 3 high, the rest low
+	/*
+	 * Set Row 3 high, the rest low
+	 */
+	FIO0PIN |= (1 << 1);
 	FIO0PIN &= ~(1 << 6);
 	FIO0PIN &= ~(1 << 0);
 	FIO0PIN &= ~(1 << 18);
 	
-	// Scan each Column input for high value
+	/*
+	 * Scan each Column input for high value
+	 */
 	if (((FIO0PIN >> 17) & 0x01) == 1) {
 		printf('You have pressed 7.');
 	}
@@ -135,17 +169,30 @@ void checkKeyRow3(void) {
 	if (((FIO0PIN >> 23) & 0x01) == 1) {
 		printf('You have pressed C.');
 	}
+
+	/*
+	 * Set Row 3 low
+	 */
 	FIO0PIN |= (1 << 1);
+
 }
 
+/*
+ * Determine if a key in Row 4 has been pressed and prints test statement
+ */
 void checkKeyRow4(void) {
 	
-	FIO0PIN |= (1 << 18);	// Set Row 4 high, the rest low
+	/*
+	 * Set Row 4 high, the rest low
+	 */
+	FIO0PIN |= (1 << 18);
 	FIO0PIN &= ~(1 << 6);
 	FIO0PIN &= ~(1 << 0);
 	FIO0PIN &= ~(1 << 1);
 	
-	// Scan each Column input for high value
+	/*
+	 * Scan each Column input for high value
+	 */
 	if (((FIO0PIN >> 17) & 0x01) == 1) {
 		printf('You have pressed *.');
 	}
@@ -158,21 +205,27 @@ void checkKeyRow4(void) {
 	if (((FIO0PIN >> 23) & 0x01) == 1) {
 		printf('You have pressed D.');
 	}
+
+	/*
+	 * Set Row 4 low
+	 */
 	FIO0PIN &= ~(1 << 18);
+
 }
 
 /*
  * Scan for pressed key
  */
 void keyScan() {
-	
+
 	checkKeyRow1();
 	checkKeyRow2();
 	checkKeyRow3();
 	checkKeyRow4();
+
 }
 /*
- *
+ * Scans keypad for pressed key and returns test statement when a key has been pressed
  */
 int main(void) {
 
