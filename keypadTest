@@ -71,16 +71,16 @@ void initIO(void) {
 void checkKeyRow1(void) {
 	
 	FI0PIN |= (1 << 6);
-	if (((FIO0PIN >> 17) & 0x01) == 0) {
+	if (((FIO0PIN >> 17) & 0x01) == 1) {
 		printf('You have pressed 1.');
 	}
-	if (((FIO0PIN >> 15) & 0x01) == 0) {
+	if (((FIO0PIN >> 15) & 0x01) == 1) {
 		printf('You have pressed 2.');
 	}
-	if (((FIO0PIN >> 16) & 0x01) == 0) {
+	if (((FIO0PIN >> 16) & 0x01) == 1) {
 		printf('You have pressed 3.');
 	}
-	if (((FIO0PIN >> 23) & 0x01) == 0) {
+	if (((FIO0PIN >> 23) & 0x01) == 1) {
 		printf('You have pressed A.');
 	}
 	FIO0PIN &= ~(1 << 6);
@@ -90,16 +90,16 @@ void checkKeyRow2(void) {
 	
 	FI0PIN |= (1 << 0);
 	
-	if (((FIO0PIN >> 17) & 0x01) == 0) {
+	if (((FIO0PIN >> 17) & 0x01) == 1) {
 		printf('You have pressed 4.');
 	}
-	if (((FIO0PIN >> 15) & 0x01) == 0) {
+	if (((FIO0PIN >> 15) & 0x01) == 1) {
 		printf('You have pressed 5.');
 	}
-	if (((FIO0PIN >> 16) & 0x01) == 0) {
+	if (((FIO0PIN >> 16) & 0x01) == 1) {
 		printf('You have pressed 6.');
 	}
-	if (((FIO0PIN >> 23) & 0x01) == 0) {
+	if (((FIO0PIN >> 23) & 0x01) == 1) {
 		printf('You have pressed B.');
 	}
 	FIO0PIN &= ~(1 << 0);
@@ -109,16 +109,16 @@ void checkKeyRow3(void) {
 	
 	FIO0PIN |= (1 << 1);
 	
-	if (((FIO0PIN >> 17) & 0x01) == 0) {
+	if (((FIO0PIN >> 17) & 0x01) == 1) {
 		printf('You have pressed 7.');
 	}
-	if (((FIO0PIN >> 15) & 0x01) == 0) {
+	if (((FIO0PIN >> 15) & 0x01) == 1) {
 		printf('You have pressed 8.');
 	}
-	if (((FIO0PIN >> 16) & 0x01) == 0) {
+	if (((FIO0PIN >> 16) & 0x01) == 1) {
 		printf('You have pressed 9.');
 	}
-	if (((FIO0PIN >> 23) & 0x01) == 0) {
+	if (((FIO0PIN >> 23) & 0x01) == 1) {
 		printf('You have pressed C.');
 	}
 	FIO0PIN |= (1 << 1);
@@ -128,16 +128,16 @@ void checkKeyRow4(void) {
 	
 	FIO0PIN |= (1 << 18);
 	
-	if (((FIO0PIN >> 17) & 0x01) == 0) {
+	if (((FIO0PIN >> 17) & 0x01) == 1) {
 		printf('You have pressed *.');
 	}
-	if (((FIO0PIN >> 15) & 0x01) == 0) {
+	if (((FIO0PIN >> 15) & 0x01) == 1) {
 		printf('You have pressed 0.');
 	}
-	if (((FIO0PIN >> 16) & 0x01) == 0) {
+	if (((FIO0PIN >> 16) & 0x01) == 1) {
 		printf('You have pressed #.');
 	}
-	if (((FIO0PIN >> 23) & 0x01) == 0) {
+	if (((FIO0PIN >> 23) & 0x01) == 1) {
 		printf('You have pressed D.');
 	}
 	FIO0PIN &= ~(1 << 18);
