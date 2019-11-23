@@ -178,7 +178,7 @@ void checkRow3(void) {
 	/*
 	 * Set Row 3 low
 	 */
-	FIO0PIN |= (1 << 1);
+	FIO0PIN &= ~(1 << 1);
 	wait_us(250);
 
 }
