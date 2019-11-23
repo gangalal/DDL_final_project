@@ -16,6 +16,8 @@
 
 #include <stdio.h>
 
+#include <timer.h>
+
 #define FIO0DIR (*(volatile unsigned int *)0x2009c000)
 #define FIO0PIN (*(volatile unsigned int *)0x2009c014)
 #define FIO0SET (*(volatile unsigned int *)0x2009C018)
