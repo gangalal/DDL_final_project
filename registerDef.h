@@ -15,17 +15,16 @@
 #define PINSEL0 (*(volatile unsigned int *)(0x4002C000))
 #define PINSEL1 (*(volatile unsigned int *)(0x4002C004))
 #define PINMODE0 (*(volatile unsigned int *)(0x4002C040))
+#define PINMODE1 (*(volatile unsigned int *)(0x4002c044))
 
 #define T0TCR (*(volatile unsigned int *)(0x40004004)) 		// Timer 0
 #define T0TC (*(volatile unsigned int *)(0x40004008))		// Timer Counter
 
-
-
-#define FIO2DIR (*(volatile unsigned int *)0x2009c040)
-#define FIO2PIN (*(volatile unsigned int *)0x2009c054)
-#define FIO2PIN0 (*(volatile unsigned char *)0x2009C054)
-
-
+#define FIO0DIR (*(volatile unsigned int *)(0x2009c000))
+#define FIO0PIN (*(volatile unsigned int *)(0x2009c014))
+#define FIO2DIR (*(volatile unsigned int *)(0x2009c040))
+#define FIO2PIN (*(volatile unsigned int *)(0x2009c054))
+#define FIO2PIN0 (*(volatile unsigned char *)(0x2009C054))
 
 #define T2TCR (*(volatile unsigned int *)(0x40090004)) 		// Timer 2 Timer Control Register
 #define T2TC (*(volatile unsigned int *)(0x40090008)) 		// Timer 2 Timer Counter
@@ -42,7 +41,7 @@
 #define U0FDR (*(volatile unsigned int *)(0x4000C028)) //fractional dividing register
 #define U0FCR (*(volatile unsigned int *)(0x4000C008))
 #define U0ACR (*(volatile unsigned int *)(0x4000C020))
-#define U0TER (*(volatile unsigned int *)(0x4000C030))
-
+#define U0RBR (*(volatile unsigned int *)(0x4000C000))
+#define U0LSR (*(volatile unsigned int *)(0x4000C014))
 
 #endif /* REGISTERDEF_H_ */
