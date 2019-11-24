@@ -1,6 +1,6 @@
 /*
 ===============================================================================
- Name        : keypadTest.c
+ Name        : keypad.h
  Author      : Jessica Horner
  Version     : Alpha
  Copyright   : $(copyright)
@@ -8,45 +8,38 @@
 ===============================================================================
 */
 
+#include <stdio.h>
+#include "registerDef.h"
+#include "timer.h"
+
 #ifdef __USE_CMSIS
 #include "LPC17xx.h"
 #endif
 
-#include <cr_section_macros.h>
-
-#include <stdio.h>
-
-#include <timer.h>
-
-#define PINMODE0 (*(volatile unsigned int *)0x4002c040)
-#define PINMODE1 (*(volatile unsigned int *)0x4002c044)
-#define FIO0DIR (*(volatile unsigned int *)0x2009c000)
-#define FIO0PIN (*(volatile unsigned int *)0x2009c014)
-
-/*
- * If we use this method - we must manually refer to the key
- * keyTable[row*4 + column]
- */
-char keyTable[] = 	"1 2 3 A"
-					          "4 5 6 B"
-					          "7 8 9 C"
-					          "* 0 # D";
-
-/*
- * If we use this method - we have to be CAREFUL with syntax!
- * keyTable[row][col]
- *
- * Jessica prefers this method - can see EXACTLY what you need right away
- */
-char otherKeyTable[] = {{'1','2','3','A'},
-						            {'4','5','6','B'},
-						            {'7','8','9','C'},
-						            {'*','0','#','D'}};
+///*
+// * If we use this method - we must manually refer to the key
+// * keyTable[row*4 + column]
+// */
+//char keyTable[] = 	"1 2 3 A"
+//			"4 5 6 B"
+//			"7 8 9 C"
+//			"* 0 # D";
+//
+///*
+// * If we use this method - we have to be CAREFUL with syntax!
+// * keyTable[row][col]
+// *
+// * Jessica prefers this method - can see EXACTLY what you need right away
+// */
+//char otherKeyTable[] = {{'1','2','3','A'},
+//			  {'4','5','6','B'},
+//			  {'7','8','9','C'},
+//			  {'*','0','#','D'}};
 
 /*
  * Initialize pins as inputs and outputs, initialize pull-up/pull-down resistors
  */
-void initIO(void) {
+void initKeypadIO(void) {
 
 	/*
 	 * Set pins 8-11 as outputs - "rows"
@@ -70,27 +63,13 @@ void initIO(void) {
 	FIO0PIN &= ~(1 << 18);
 
 	/*
-	 * Set pins 12-15 with no internal resistors
-	 * If we are using external pull down resistors, do we need internal?
-	 */
-//	PINMODE1 |= (1 << 2);
-//	PINMODE &= ~(1 << 3);
-//	PINMODE0 |= (1 << 30);
-//	PINMODE &= ~(1 << 31);
-//	PINMODE1 |= (1 << 0);
-//	PINMODE &= ~(1 << 1);
-//	PINMODE1 |= (1 << 14);
-//	PINMODE &= ~(1 << 15);
-
-	/*
 	 * Set pins 12-15 with internal pull down resistors
 	 * See the above question
 	 */
-//	PINMODE1 |= (1 << 2) | (1 << 3);
-//	PINMODE0 |= (1 << 30) | (1 << 31);
-//	PINMODE1 |= (1 << 0) | (1 << 1);
-//	PINMODE1 |= (1 << 14) | (1 << 15);
-
+	PINMODE1 |= (1 << 2) | (1 << 3);
+	PINMODE0 |= (1 << 30) | (1 << 31);
+	PINMODE1 |= (1 << 0) | (1 << 1);
+	PINMODE1 |= (1 << 14) | (1 << 15);
 
 }
 
@@ -106,6 +85,7 @@ void rowReset() {
 	wait_us(250);
 
 }
+
 /*
  * Set Row 1 high, the rest low
  */
@@ -124,7 +104,7 @@ void setRow1(void) {
  */
 void setRow2(void) {
 
-	FIO00PIN |= (1 << 0);
+	FIO0PIN |= (1 << 0);
 	FIO0PIN &= ~(1 << 6);
 	FIO0PIN &= ~(1 << 1);
 	FIO0PIN &= ~(1 << 18);
@@ -164,27 +144,34 @@ void setRow4(void) {
 void checkRow1(void) {
 
 	setRow1();
+	wait_us(250);
 
 	/*
 	 * Row 1 of the keypad corresponds to waveform selection
 	 */
 	if (((FIO0PIN >> 17) & 0x01) == 1) {
-		printf('You have selected the square waveform.');
+		printf("You have selected the square waveform.\n");
+		wait_us(50000);
 		// TODO input command for square waveform & LCD display info
 	}
 	if (((FIO0PIN >> 15) & 0x01) == 1) {
-		printf('You have selected the triangle waveform.');
+		printf("You have selected the triangle waveform.\n");
+		wait_us(50000);
 		// TODO input command for triangle waveform & LCD display info
 	}
 	if (((FIO0PIN >> 16) & 0x01) == 1) {
-		printf('You have selected the sine waveform.');
+		printf("You have selected the sine waveform.\n");
+		wait_us(50000);
 		// TODO input command for sine waveform & LCD display info
 	}
 	if (((FIO0PIN >> 23) & 0x01) == 1) {
-		printf('You have pressed A.');
+		printf("You have pressed A.\n");
+		wait_us(50000);
 	}
 
+	wait_us(50000);
 	rowReset();
+	wait_us(250);
 
 }
 
@@ -194,27 +181,34 @@ void checkRow1(void) {
 void checkRow2(void) {
 
 	setRow2();
+	wait_us(250);
 
 	/*
 	 * Scan each Column input for high value
 	 */
 	if (((FIO0PIN >> 17) & 0x01) == 1) {
-		printf('You have selected the slow click track speed.');
+		printf("You have selected the slow click track speed.\n");
+		wait_us(50000);
 		// TODO input command for slow click track speed & LCD display info
 	}
 	if (((FIO0PIN >> 15) & 0x01) == 1) {
-		printf('You have selected the normal click track speed.');
+		printf("You have selected the normal click track speed.\n");
+		wait_us(50000);
 		// TODO input command for normal click track speed & LCD display info
 	}
 	if (((FIO0PIN >> 16) & 0x01) == 1) {
-		printf('You have selected the high click track speed.');
+		printf("You have selected the high click track speed.\n");
+		wait_us(50000);
 		// TODO input command for high click track speed & LCD display info
 	}
 	if (((FIO0PIN >> 23) & 0x01) == 1) {
-		printf('You have pressed B.');
+		printf("You have pressed B.\n");
+		wait_us(50000);
 	}
 
+	wait_us(50000);
 	rowReset();
+	wait_us(250);
 
 }
 
@@ -224,24 +218,31 @@ void checkRow2(void) {
 void checkRow3(void) {
 
 	setRow3();
+	wait_us(250);
 
 	/*
 	 * Scan each Column input for high value
 	 */
 	if (((FIO0PIN >> 17) & 0x01) == 1) {
-		printf('You have pressed 7.');
+		printf("You have pressed 7.\n");
+		wait_us(50000);
 	}
 	if (((FIO0PIN >> 15) & 0x01) == 1) {
-		printf('You have pressed 8.');
+		printf("You have pressed 8.\n");
+		wait_us(50000);
 	}
 	if (((FIO0PIN >> 16) & 0x01) == 1) {
-		printf('You have pressed 9.');
+		printf("You have pressed 9.\n");
+		wait_us(50000);
 	}
 	if (((FIO0PIN >> 23) & 0x01) == 1) {
-		printf('You have pressed C.');
+		printf("You have pressed C.\n");
+		wait_us(50000);
 	}
 
+	wait_us(50000);
 	rowReset();
+	wait_us(250);
 }
 
 /*
@@ -250,24 +251,31 @@ void checkRow3(void) {
 void checkRow4(void) {
 
 	setRow4();
+	wait_us(250);
 
 	/*
 	 * Scan each Column input for high value
 	 */
 	if (((FIO0PIN >> 17) & 0x01) == 1) {
-		printf('You have pressed *.');
+		printf("You have pressed *.\n");
+		wait_us(50000);
 	}
 	if (((FIO0PIN >> 15) & 0x01) == 1) {
-		printf('You have pressed 0.');
+		printf("You have pressed 0.\n");
+		wait_us(50000);
 	}
 	if (((FIO0PIN >> 16) & 0x01) == 1) {
-		printf('You have pressed #.');
+		printf("You have pressed #.\n");
+		wait_us(50000);
 	}
 	if (((FIO0PIN >> 23) & 0x01) == 1) {
-		printf('You have pressed D.');
+		printf("You have pressed D.\n");
+		wait_us(50000);
 	}
 
+	wait_us(50000);
 	rowReset();
+	wait_us(250);
 
 }
 
