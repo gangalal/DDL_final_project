@@ -46,7 +46,6 @@ void timer2Init() {
 	timer2Start();
 }
 
-
 /**
  * Configure Timer 2 for frequency generation
  */
@@ -60,8 +59,5 @@ void configT2MR3(int freq) {
 		DACR = aout << 6;
 	}
 }
-
-
-
 
 #endif /* MATCH2_H_ */
