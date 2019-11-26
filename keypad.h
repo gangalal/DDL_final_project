@@ -44,7 +44,7 @@ char otherKeyTable[] = {{'1','2','3','A'},
 			{'*','0','#','D'}};
 
 /*
- * Initialize pins as inputs and outputs
+ * Initialize GPIO0 pins as inputs and outputs
  * Initialize pull-up/pull-down resistors
  * for the 4x4 keypad
  */
