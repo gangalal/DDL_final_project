@@ -9,8 +9,8 @@
 #define REGISTERDEF_H_
 
 #define PCONP (*(volatile unsigned int *)(0x400FC0C4))
-#define PCLKSEL0 (*(volatile unsigned int *)(0x400FC1A8)) 	// Timer 0 Clock select
-#define PCLKSEL1 (*(volatile unsigned int *)(0x400FC1AC)) 	// Timer 2 Clock select
+#define PCLKSEL0 (*(volatile unsigned int *)(0x400FC1A8))   // Timer 0 Clock select
+#define PCLKSEL1 (*(volatile unsigned int *)(0x400FC1AC))   // Timer 2 Clock select
 
 #define PINSEL0 (*(volatile unsigned int *)(0x4002C000))
 #define PINSEL1 (*(volatile unsigned int *)(0x4002C004))
@@ -29,13 +29,13 @@
 
 #define T0TCR (*(volatile unsigned int *)(0x40004004))      // Timer 0
 #define T0TC (*(volatile unsigned int *)(0x40004008))       // Timer Counter
-#define T2TCR (*(volatile unsigned int *)(0x40090004)) 		// Timer 2 Timer Control Register
-#define T2TC (*(volatile unsigned int *)(0x40090008)) 		// Timer 2 Timer Counter
-#define T2EMR (*(volatile unsigned int *)(0x4009003C)) 		// EMR Match Register for Timer 2
-#define T2MCR (*(volatile unsigned int *)(0x40090014)) 		// MCR Match Register for Timer 2
-#define T2CTCR (*(volatile unsigned int *)(0x40090070)) 	// Count Control Register for Timer 2 Selects between timer and counter mode
-#define T2MR3 (*(volatile unsigned int *)(0x40090024)) 		// Match Register 3
-#define DACR (*(volatile unsigned int *)(0x4008C000)) 		// DAC Register
+#define T2TCR (*(volatile unsigned int *)(0x40090004))      // Timer 2 Timer Control Register
+#define T2TC (*(volatile unsigned int *)(0x40090008))       // Timer 2 Timer Counter
+#define T2EMR (*(volatile unsigned int *)(0x4009003C))      // EMR Match Register for Timer 2
+#define T2MCR (*(volatile unsigned int *)(0x40090014))      // MCR Match Register for Timer 2
+#define T2CTCR (*(volatile unsigned int *)(0x40090070))     // Count Control Register for Timer 2 Selects between timer and counter mode
+#define T2MR3 (*(volatile unsigned int *)(0x40090024))      // Match Register 3
+#define DACR (*(volatile unsigned int *)(0x4008C000))       // DAC Register
 
 #define U0LCR (*(volatile unsigned int *)(0x4000C00C))
 #define U0DLL (*(volatile unsigned int *)(0x4000C000))
