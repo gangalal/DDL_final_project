@@ -44,5 +44,6 @@
 #define U0FCR (*(volatile unsigned int *)(0x4000C008))
 #define U0ACR (*(volatile unsigned int *)(0x4000C020))
 #define U0TER (*(volatile unsigned int *)(0x4000C030))
+#define U0LSR (*(volatile unsigned in *)(0x4000C014))
 
 #endif /* REGISTERDEF_H_ */
