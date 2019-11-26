@@ -27,8 +27,8 @@
 #define I2C0CONCLR (*(volatile unsigned int *)(0x4001C018))
 #define I2C0DAT (*(volatile unsigned int *)(0x4001C008))
 
-#define T0TCR (*(volatile unsigned int *)(0x40004004))      // Timer 0
-#define T0TC (*(volatile unsigned int *)(0x40004008))		// Timer Counter
+#define T0TCR (*(volatile unsigned int *)(0x40004004))    // Timer 0
+#define T0TC (*(volatile unsigned int *)(0x40004008))		  // Timer Counter
 #define T2TCR (*(volatile unsigned int *)(0x40090004)) 		// Timer 2 Timer Control Register
 #define T2TC (*(volatile unsigned int *)(0x40090008)) 		// Timer 2 Timer Counter
 #define T2EMR (*(volatile unsigned int *)(0x4009003C)) 		// EMR Match Register for Timer 2
@@ -40,7 +40,7 @@
 #define U0LCR (*(volatile unsigned int *)(0x4000C00C))
 #define U0DLL (*(volatile unsigned int *)(0x4000C000))
 #define U0DLM (*(volatile unsigned int *)(0x4000C004))
-#define U0FDR (*(volatile unsigned int *)(0x4000C028))      //fractional dividing register
+#define U0FDR (*(volatile unsigned int *)(0x4000C028))    //fractional dividing register
 #define U0FCR (*(volatile unsigned int *)(0x4000C008))
 #define U0ACR (*(volatile unsigned int *)(0x4000C020))
 #define U0TER (*(volatile unsigned int *)(0x4000C030))
