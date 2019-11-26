@@ -16,7 +16,7 @@
 #define PINSEL1 (*(volatile unsigned int *)(0x4002C004))
 #define PINMODE0 (*(volatile unsigned int *)(0x4002C040))
 
-#define FIO2DIR (*(volatile unsigned int *)0x2009c040)		// GPIO 2
+#define FIO2DIR (*(volatile unsigned int *)0x2009c040)      // GPIO 2
 #define FIO2PIN (*(volatile unsigned int *)0x2009c054)
 #define FIO2PIN0 (*(volatile unsigned char *)0x2009C054)
 
