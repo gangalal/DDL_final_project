@@ -16,9 +16,11 @@
 #define PINSEL1 (*(volatile unsigned int *)(0x4002C004))
 #define PINMODE0 (*(volatile unsigned int *)(0x4002C040))
 
-#define FIO2DIR (*(volatile unsigned int *)0x2009c040)      // GPIO 2
-#define FIO2PIN (*(volatile unsigned int *)0x2009c054)
-#define FIO2PIN0 (*(volatile unsigned char *)0x2009C054)
+#define FIO0DIR (*(volatile unsigned int *)(0x2009C000))
+#define FIO0PIN (*(volatile unsigned int *)(0x2009C014))
+#define FIO2DIR (*(volatile unsigned int *)(0x2009c040))      // GPIO 2
+#define FIO2PIN (*(volatile unsigned int *)(0x2009c054))
+#define FIO2PIN0 (*(volatile unsigned char *)(0x2009C054))
 
 #define I2CPADCFG (*(volatile unsigned int *)(0x4002C07C))  // I2C for EEProm
 #define I2C0SCLH (*(volatile unsigned int *)(0x4001C010))
