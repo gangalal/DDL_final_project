@@ -28,9 +28,9 @@
  * keyTable[row*4 + column]
  */
 char keyTable[] = 	"1 2 3 A"
-					"4 5 6 B"
-					"7 8 9 C"
-					"* 0 # D";
+			"4 5 6 B"
+			"7 8 9 C"
+			"* 0 # D";
 
 /*
  * If we use this method - we have to be CAREFUL with syntax!
@@ -39,12 +39,13 @@ char keyTable[] = 	"1 2 3 A"
  * Jessica prefers this method - can see EXACTLY what you need right away
  */
 char otherKeyTable[] = {{'1','2','3','A'},
-						{'4','5','6','B'},
-						{'7','8','9','C'},
-						{'*','0','#','D'}};
+			{'4','5','6','B'},
+			{'7','8','9','C'},
+			{'*','0','#','D'}};
 
 /*
- * Initialize pins as inputs and outputs, initialize pull-up/pull-down resistors
+ * Initialize GPIO0 pins as inputs and outputs, 
+ * Initialize pull-up/pull-down resistors
  */
 void initIO(void) {
 
@@ -70,26 +71,13 @@ void initIO(void) {
 	FIO0PIN &= ~(1 << 18);
 
 	/*
-	 * Set pins 12-15 with no internal resistors
-	 * If we are using external pull down resistors, do we need internal?
-	 */
-//	PINMODE1 |= (1 << 2);
-//	PINMODE &= ~(1 << 3);
-//	PINMODE0 |= (1 << 30);
-//	PINMODE &= ~(1 << 31);
-//	PINMODE1 |= (1 << 0);
-//	PINMODE &= ~(1 << 1);
-//	PINMODE1 |= (1 << 14);
-//	PINMODE &= ~(1 << 15);
-
-	/*
 	 * Set pins 12-15 with internal pull down resistors
 	 * See the above question
 	 */
-//	PINMODE1 |= (1 << 2) | (1 << 3);
-//	PINMODE0 |= (1 << 30) | (1 << 31);
-//	PINMODE1 |= (1 << 0) | (1 << 1);
-//	PINMODE1 |= (1 << 14) | (1 << 15);
+	PINMODE1 |= (1 << 2) | (1 << 3);
+	PINMODE0 |= (1 << 30) | (1 << 31);
+	PINMODE1 |= (1 << 0) | (1 << 1);
+	PINMODE1 |= (1 << 14) | (1 << 15);
 
 
 }
