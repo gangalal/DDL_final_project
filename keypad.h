@@ -28,9 +28,9 @@
  * keyTable[row*4 + column]
  */
 char keyTable[] = 	"1 2 3 A"
-			"4 5 6 B"
-			"7 8 9 C"
-			"* 0 # D";
+					"4 5 6 B"
+					"7 8 9 C"
+					"* 0 # D";
 
 /*
  * If we use this method - we have to be CAREFUL with syntax!
@@ -39,16 +39,16 @@ char keyTable[] = 	"1 2 3 A"
  * Jessica prefers this method - can see EXACTLY what you need right away
  */
 char otherKeyTable[] = {{'1','2','3','A'},
-			{'4','5','6','B'},
-			{'7','8','9','C'},
-			{'*','0','#','D'}};
+						{'4','5','6','B'},
+						{'7','8','9','C'},
+						{'*','0','#','D'}};
 
 /*
  * Initialize GPIO0 pins as inputs and outputs
  * Initialize pull-up/pull-down resistors
  * for the 4x4 keypad
  */
-void initKeypadIO(void) {
+void keypadInit(void) {
 
 	/*
 	 * Set pins 8-11 as outputs - "rows"
