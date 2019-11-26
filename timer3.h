@@ -8,17 +8,15 @@
 #ifndef TIMER3_H_
 #define TIMER3_H_
 
-
 /**
- * Start Timer 2
+ * Start Timer 3
  */
 static inline void timer3Start() {
 	T3TCR |= (1 << 0);
 }
 
-
 /**
- * Reset Timer 2
+ * Reset Timer 3
  */
 static inline void timer3Reset() {
 	T3TCR |= (1 << 1);
@@ -28,13 +26,18 @@ static inline void timer3Reset() {
 	T3TCR &= ~(1 << 1);	//
 }
 
-
+/*
+ * Read Timer 3 in microseconds
+ */
 int timer3Read_us() {
 
 	return T0TC; // Read Timer 0 Counter
 
 }
 
+/*
+ * Wait function for Timer 3 in microseconds
+ */
 void wait3_us(int usec) {
 
 	timer3Start();
@@ -45,7 +48,7 @@ void wait3_us(int usec) {
 
 
 /**
- * Initialize Timer 2 to control the timing of decay for each tone
+ * Initialize Timer 3 to control the timing of decay for each tone
  */
 void timer3Init() {
 	PCONP |= (1 << 23);		// Timer 2 Enable
@@ -61,16 +64,13 @@ void timer3Init() {
 
 }
 
-
-
 /**
- * Configure Timer 2 for frequency generation
+ * Configure Timer 3 for frequency generation
  */
 void configT3MR0(int freq) {
 	timer0Reset();			// Reset Timer 0
 	T3MR0 = (1000000 / (2 * freq));	// load T2MR3 with match value based on frequency PCLK/(2*freq)
 	timer3Reset();
 }
-
 
 #endif /* TIMER3_H_ */
