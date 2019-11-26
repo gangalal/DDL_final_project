@@ -52,7 +52,7 @@ void keypadInit(void) {
 
 	/*
 	 * Set pins 8-11 as outputs - "rows"
-	 * Set pins 12-15 as inputs - "columns"
+	 * Set pins 12-15 as inputs - "columns" 
 	 */
 	FIO0DIR |= (1 << 6);	// Pin 8 	- 	Row 1
 	FIO0DIR |= (1 << 0);	// Pin 9 	- 	Row 2
