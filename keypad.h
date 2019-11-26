@@ -28,9 +28,9 @@
  * keyTable[row*4 + column]
  */
 char keyTable[] = 	"1 2 3 A"
-					"4 5 6 B"
-					"7 8 9 C"
-					"* 0 # D";
+			"4 5 6 B"
+			"7 8 9 C"
+			"* 0 # D";
 
 /*
  * If we use this method - we have to be CAREFUL with syntax!
@@ -39,15 +39,16 @@ char keyTable[] = 	"1 2 3 A"
  * Jessica prefers this method - can see EXACTLY what you need right away
  */
 char otherKeyTable[] = {{'1','2','3','A'},
-						{'4','5','6','B'},
-						{'7','8','9','C'},
-						{'*','0','#','D'}};
+			{'4','5','6','B'},
+			{'7','8','9','C'},
+			{'*','0','#','D'}};
 
 /*
- * Initialize GPIO0 pins as inputs and outputs, 
+ * Initialize pins as inputs and outputs
  * Initialize pull-up/pull-down resistors
+ * for the 4x4 keypad
  */
-void initGPIO0(void) {
+void initKeypadIO(void) {
 
 	/*
 	 * Set pins 8-11 as outputs - "rows"
@@ -79,7 +80,6 @@ void initGPIO0(void) {
 	PINMODE1 |= (1 << 0) | (1 << 1);
 	PINMODE1 |= (1 << 14) | (1 << 15);
 
-
 }
 
 /*
@@ -94,6 +94,7 @@ void rowReset() {
 	wait_us(250);
 
 }
+
 /*
  * Set Row 1 high, the rest low
  */
@@ -112,7 +113,7 @@ void setRow1(void) {
  */
 void setRow2(void) {
 
-	FIO00PIN |= (1 << 0);
+	FIO0PIN |= (1 << 0);
 	FIO0PIN &= ~(1 << 6);
 	FIO0PIN &= ~(1 << 1);
 	FIO0PIN &= ~(1 << 18);
@@ -152,27 +153,37 @@ void setRow4(void) {
 void checkRow1(void) {
 
 	setRow1();
+	wait_us(250);
 
 	/*
 	 * Row 1 of the keypad corresponds to waveform selection
 	 */
 	if (((FIO0PIN >> 17) & 0x01) == 1) {
-		printf('You have selected the square waveform.');
+		printf("You have selected the square waveform.\n");
+		wait_us(50000);
 		// TODO input command for square waveform & LCD display info
+		squareWave();
 	}
 	if (((FIO0PIN >> 15) & 0x01) == 1) {
-		printf('You have selected the triangle waveform.');
+		printf("You have selected the triangle waveform.\n");
+		wait_us(50000);
 		// TODO input command for triangle waveform & LCD display info
+		triangleWave();
 	}
 	if (((FIO0PIN >> 16) & 0x01) == 1) {
-		printf('You have selected the sine waveform.');
+		printf("You have selected the sine waveform.\n");
+		wait_us(50000);
 		// TODO input command for sine waveform & LCD display info
+		sineWave();
 	}
 	if (((FIO0PIN >> 23) & 0x01) == 1) {
-		printf('You have pressed A.');
+		printf("You have pressed A.\n");
+		wait_us(50000);
 	}
 
+	wait_us(50000);
 	rowReset();
+	wait_us(250);
 
 }
 
@@ -182,27 +193,37 @@ void checkRow1(void) {
 void checkRow2(void) {
 
 	setRow2();
+	wait_us(250);
 
 	/*
 	 * Scan each Column input for high value
 	 */
 	if (((FIO0PIN >> 17) & 0x01) == 1) {
-		printf('You have selected the slow click track speed.');
+		printf("You have selected the slow click track speed.\n");
+		wait_us(50000);
 		// TODO input command for slow click track speed & LCD display info
+		slowClick();
 	}
 	if (((FIO0PIN >> 15) & 0x01) == 1) {
-		printf('You have selected the normal click track speed.');
+		printf("You have selected the normal click track speed.\n");
+		wait_us(50000);
 		// TODO input command for normal click track speed & LCD display info
+		normalClick();
 	}
 	if (((FIO0PIN >> 16) & 0x01) == 1) {
-		printf('You have selected the high click track speed.');
+		printf("You have selected the high click track speed.\n");
+		wait_us(50000);
 		// TODO input command for high click track speed & LCD display info
+		fastClick();
 	}
 	if (((FIO0PIN >> 23) & 0x01) == 1) {
-		printf('You have pressed B.');
+		printf("You have pressed B.\n");
+		wait_us(50000);
 	}
 
+	wait_us(50000);
 	rowReset();
+	wait_us(250);
 
 }
 
@@ -212,24 +233,31 @@ void checkRow2(void) {
 void checkRow3(void) {
 
 	setRow3();
+	wait_us(250);
 
 	/*
 	 * Scan each Column input for high value
 	 */
 	if (((FIO0PIN >> 17) & 0x01) == 1) {
-		printf('You have pressed 7.');
+		printf("You have pressed 7.\n");
+		wait_us(50000);
 	}
 	if (((FIO0PIN >> 15) & 0x01) == 1) {
-		printf('You have pressed 8.');
+		printf("You have pressed 8.\n");
+		wait_us(50000);
 	}
 	if (((FIO0PIN >> 16) & 0x01) == 1) {
-		printf('You have pressed 9.');
+		printf("You have pressed 9.\n");
+		wait_us(50000);
 	}
 	if (((FIO0PIN >> 23) & 0x01) == 1) {
-		printf('You have pressed C.');
+		printf("You have pressed C.\n");
+		wait_us(50000);
 	}
 
+	wait_us(50000);
 	rowReset();
+	wait_us(250);
 }
 
 /*
@@ -238,24 +266,31 @@ void checkRow3(void) {
 void checkRow4(void) {
 
 	setRow4();
+	wait_us(250);
 
 	/*
 	 * Scan each Column input for high value
 	 */
 	if (((FIO0PIN >> 17) & 0x01) == 1) {
-		printf('You have pressed *.');
+		printf("You have pressed *.\n");
+		wait_us(50000);
 	}
 	if (((FIO0PIN >> 15) & 0x01) == 1) {
-		printf('You have pressed 0.');
+		printf("You have pressed 0.\n");
+		wait_us(50000);
 	}
 	if (((FIO0PIN >> 16) & 0x01) == 1) {
-		printf('You have pressed #.');
+		printf("You have pressed #.\n");
+		wait_us(50000);
 	}
 	if (((FIO0PIN >> 23) & 0x01) == 1) {
-		printf('You have pressed D.');
+		printf("You have pressed D.\n");
+		wait_us(50000);
 	}
 
+	wait_us(50000);
 	rowReset();
+	wait_us(250);
 
 }
 
