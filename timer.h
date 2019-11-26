@@ -2,28 +2,36 @@
 #ifndef TIMER_H
 #define TIMER_H
 
-// This timer generates our waveform
+/*
+ * Initialize timer 0
+ */
 void timer0Init() {
 	PCONP |= (1 << 1);					// Timer 0 Enable
 	PCLKSEL0 &= ~ (3 << 2);				// Reset clock selection on Timer 0, default = 1MHz
 }
 
-// Start Timer 0
+/*
+ * Start Timer 0
+ */
 void timer0Start() {
 
 	T0TCR |= (1 << 0);
 
 }
 
-// Stop Timer 0
+/*
+ * Stop Timer 0
+ */
 void timer0Stop() {
 
 	T0TCR &= ~(1 << 0);
 
 }
 
-// Clear Counter
- void timer0Reset() {
+/*
+ * Clear Timer 0
+ */
+void timer0Reset() {
 
 	T0TCR |= (1 << 1);
 	while (T0TC != 0) {
@@ -33,12 +41,18 @@ void timer0Stop() {
 
 }
 
- int timer0Read_us() {
+/*
+ * Read Timer 0
+ */
+int timer0Read_us() {
 
 	return T0TC; // Read Timer 0 Counter
 
 }
 
+/*
+ * Wait function for Timer 0 in microseconds
+ */
 void wait_us(int usec) {
 
 	timer0Start();
@@ -47,8 +61,9 @@ void wait_us(int usec) {
 	}
 }
 
-
-
+/*
+ * wait function for Timer 0
+ */
 void wait_ticks(unsigned long count) {
 	volatile int ticks;
 	for (ticks = 0; ticks < count; ticks++) {
@@ -61,9 +76,8 @@ void wait_ticks(unsigned long count) {
 
 }
 
-
-/**
- * waits for count*1sec
+/*
+ * wait function of one second for Timer 0
  */
 void waitOneSecond(unsigned long count) {
 	volatile int ticks;
@@ -72,6 +86,5 @@ void waitOneSecond(unsigned long count) {
 
 	}
 }
-
 
 #endif // timer_H
