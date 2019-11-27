@@ -1,36 +1,33 @@
-/*
-===============================================================================
- Name        : keypad.h
- Author      : Jessica Horner
- Version     : Alpha
- Copyright   : $(copyright)
- Description : ** Needs description still **
-===============================================================================
-*/
-
-#ifdef __USE_CMSIS
-#include "LPC17xx.h"
-#endif
+#ifndef KEYPAD_H_
+#define KEYPAD_H_
 
 #include <cr_section_macros.h>
 
 #include <stdio.h>
 
-#include <timer.h>
+#include "timer0.h"
+#include "registerDef.h"
+#include "lcd.h"
 
-#define PINMODE0 (*(volatile unsigned int *)0x4002c040)
-#define PINMODE1 (*(volatile unsigned int *)0x4002c044)
-#define FIO0DIR (*(volatile unsigned int *)0x2009c000)
-#define FIO0PIN (*(volatile unsigned int *)0x2009c014)
+/*
+ * Declare and define waveform displays for LCD
+ */
+int square [] = {0x43, 0x68, 0x6f, 0x6f, 0x73, 0x65, 0x20, 0x77, 0x61, 0x76, 0x65, 0x66, 0x6f, 0x72, 0x6d};
+int squareLen = size(square);
+int triangle [] = {0x5E, 0x5E, 0x5E, 0x5E, 0x5E, 0x5E, 0x5E, 0x5E, 0x5E, 0x5E, 0x5E, 0x5E};
+int triangleLen = size(triangle);
+// TODO Need to figure this out
+int sine [] = {0x42, 0x5E, 0x5E, 0x5E, 0x5E, 0x5E, 0x5E, 0x5E, 0x5E};
+int sineLen = size(sine);
 
 /*
  * If we use this method - we must manually refer to the key
  * keyTable[row*4 + column]
  */
 char keyTable[] = 	"1 2 3 A"
-			"4 5 6 B"
-			"7 8 9 C"
-			"* 0 # D";
+					"4 5 6 B"
+					"7 8 9 C"
+					"* 0 # D";
 
 /*
  * If we use this method - we have to be CAREFUL with syntax!
@@ -39,9 +36,9 @@ char keyTable[] = 	"1 2 3 A"
  * Jessica prefers this method - can see EXACTLY what you need right away
  */
 char otherKeyTable[] = {{'1','2','3','A'},
-			{'4','5','6','B'},
-			{'7','8','9','C'},
-			{'*','0','#','D'}};
+						{'4','5','6','B'},
+						{'7','8','9','C'},
+						{'*','0','#','D'}};
 
 /*
  * Initialize GPIO0 pins as inputs and outputs
@@ -52,7 +49,7 @@ void keypadInit(void) {
 
 	/*
 	 * Set pins 8-11 as outputs - "rows"
-	 * Set pins 12-15 as inputs - "columns" 
+	 * Set pins 12-15 as inputs - "columns"
 	 */
 	FIO0DIR |= (1 << 6);	// Pin 8 	- 	Row 1
 	FIO0DIR |= (1 << 0);	// Pin 9 	- 	Row 2
@@ -163,18 +160,21 @@ void checkRow1(void) {
 		wait_us(50000);
 		// TODO input command for square waveform & LCD display info
 		squareWave();
+		displayWord(square,squareLen);
 	}
 	if (((FIO0PIN >> 15) & 0x01) == 1) {
 		printf("You have selected the triangle waveform.\n");
 		wait_us(50000);
 		// TODO input command for triangle waveform & LCD display info
 		triangleWave();
+		displayWord(triangle,triangleLen);
 	}
 	if (((FIO0PIN >> 16) & 0x01) == 1) {
 		printf("You have selected the sine waveform.\n");
 		wait_us(50000);
 		// TODO input command for sine waveform & LCD display info
 		sineWave();
+		displayWord(sine,sineLen);
 	}
 	if (((FIO0PIN >> 23) & 0x01) == 1) {
 		printf("You have pressed A.\n");
@@ -308,3 +308,5 @@ void keyScan() {
 	checkRow4();
 
 }
+
+#endif /* KEYPAD_H_ */
