@@ -1,23 +1,11 @@
-/*
-===============================================================================
- Name        : keypadTest.c
- Author      : Daniel Glover
- Version     : Alpha
- Copyright   : $(copyright)
- Description : ** Needs description still **
-===============================================================================
-*/
-
-#ifdef __USE_CMSIS
-#include "LPC17xx.h"
-#endif
+#ifndef I2C_H_
+#define I2C_H_
 
 #include <cr_section_macros.h>
 
 #include <stdio.h>
-
-#include <timer.h>
 #include "registerDef.h"
+#include "timer0.h"
 
 /*
  * I2C initialize
@@ -89,3 +77,4 @@ void I2CStop() {
 		//wait for stop condition to be set
 	}
 }
+#endif /* I2C_H_ */
