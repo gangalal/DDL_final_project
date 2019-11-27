@@ -160,21 +160,21 @@ void checkRow1(void) {
 		wait_us(50000);
 		// TODO input command for square waveform & LCD display info
 		squareWave();
-		displayWord(square,squareLen);
+		displayWords(square,squareLen);
 	}
 	if (((FIO0PIN >> 15) & 0x01) == 1) {
 		printf("You have selected the triangle waveform.\n");
 		wait_us(50000);
 		// TODO input command for triangle waveform & LCD display info
 		triangleWave();
-		displayWord(triangle,triangleLen);
+		displayWords(triangle,triangleLen);
 	}
 	if (((FIO0PIN >> 16) & 0x01) == 1) {
 		printf("You have selected the sine waveform.\n");
 		wait_us(50000);
 		// TODO input command for sine waveform & LCD display info
 		sineWave();
-		displayWord(sine,sineLen);
+		displayWords(sine,sineLen);
 	}
 	if (((FIO0PIN >> 23) & 0x01) == 1) {
 		printf("You have pressed A.\n");
