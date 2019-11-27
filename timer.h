@@ -1,6 +1,6 @@
 #include "registerDef.h"
-#ifndef TIMER_H
-#define TIMER_H
+#ifndef TIMER0_H
+#define TIMER0_H
 
 /*
  * Initialize timer 0
@@ -76,7 +76,7 @@ void wait_ticks(unsigned long count) {
 
 }
 
-/*
+/**
  * wait function of one second for Timer 0
  */
 void waitOneSecond(unsigned long count) {
@@ -87,4 +87,4 @@ void waitOneSecond(unsigned long count) {
 	}
 }
 
-#endif // timer_H
+#endif // timer0_H
