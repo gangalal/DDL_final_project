@@ -1,16 +1,5 @@
-/*
-===============================================================================
- Name        : eeprom.h
- Author      : Daniel Glover
- Version     : Alpha
- Copyright   : $(copyright)
- Description : ** Needs description still **
-===============================================================================
-*/
-
-#ifdef __USE_CMSIS
-#include "LPC17xx.h"
-#endif
+#ifndef EEPROM_H_
+#define EEPROM_H_
 
 #include <cr_section_macros.h>
 
@@ -21,9 +10,9 @@
 /*
  * Write to the EEPROM
  */
-void memWrite(int data) {
-    int addr = 0b1010000; // EEprom address
-    I2CStart();
+void memWrite(int* data) {
+	int addr = 0b1010000; // EEprom address
+	I2CStart();
 	I2CWrite(addr << 1); // last bit 0 for write
 	I2CWrite(32); // address to write to
 	for (int i = 0; i<25; i++){ // index array values
@@ -36,7 +25,7 @@ void memWrite(int data) {
 /*
  * Read from the EEPROM
  */
-void memRead(int data) {
+void memRead(int* data) {
 	int addr = 0b1010000; // EEprom address
 	int count = 0;
 	I2CStart();
@@ -64,3 +53,4 @@ void memRead(int data) {
 		// insert printf command or LCD screen shot
 	}
 }
+#endif /* EEPROM_H_ */
