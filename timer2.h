@@ -1,14 +1,8 @@
-/*
- * match2.h
- *
- *  Created on: Nov 14, 2019
- *      Author: lama0003
- */
 #include "registerDef.h"
-#include "timer.h"
+#include "timer0.h"
 
-#ifndef MATCH2_H_
-#define MATCH2_H_
+#ifndef TIMER2_H_
+#define TIMER2_H_
 
 
 /**
@@ -49,15 +43,22 @@ void timer2Init() {
 /**
  * Configure Timer 2 for frequency generation
  */
-void configT2MR3(int freq) {
-	timer0Start();
+//void configT2MR3(int freq) {
+//	timer0Start();
+//	timer0Reset();			// Reset Timer 0
+//	T2MR3 = (1000000 / (2 * freq));	// load T2MR3 with match value based on frequency PCLK/(2*freq)
+//	timer2Reset();
+//	while (timer0Read_us() < 2000000.0) {
+//		int aout = (1 - (timer0Read_us() / 2000000.0)) * 1023.0;
+//		DACR = aout << 6;
+//	}
+//}
+
+// play frequencies through match register (NO AOUT)
+void timer2genFreq(int freq) {
 	timer0Reset();			// Reset Timer 0
 	T2MR3 = (1000000 / (2 * freq));	// load T2MR3 with match value based on frequency PCLK/(2*freq)
 	timer2Reset();
-	while (timer0Read_us() < 2000000.0) {
-		int aout = (1 - (timer0Read_us() / 2000000.0)) * 1023.0;
-		DACR = aout << 6;
-	}
 }
 
-#endif /* MATCH2_H_ */
+#endif /* TIMER2_H_ */
