@@ -1,13 +1,7 @@
-/*
- * timer3.h
- *
- *  Created on: Nov 26, 2019
- *      Author: lama0003
- */
-
 #ifndef TIMER3_H_
 #define TIMER3_H_
 
+#include "registerDef.h"
 /**
  * Start Timer 3
  */
