@@ -8,17 +8,7 @@
 #include "timer0.h"
 #include "registerDef.h"
 #include "lcd.h"
-
-/*
- * Declare and define waveform displays for LCD
- */
-int square [] = {0x43, 0x68, 0x6f, 0x6f, 0x73, 0x65, 0x20, 0x77, 0x61, 0x76, 0x65, 0x66, 0x6f, 0x72, 0x6d};
-int squareLen = size(square);
-int triangle [] = {0x5E, 0x5E, 0x5E, 0x5E, 0x5E, 0x5E, 0x5E, 0x5E, 0x5E, 0x5E, 0x5E, 0x5E};
-int triangleLen = size(triangle);
-// TODO Need to figure this out
-int sine [] = {0x42, 0x5E, 0x5E, 0x5E, 0x5E, 0x5E, 0x5E, 0x5E, 0x5E};
-int sineLen = size(sine);
+#include "prompts.h"
 
 /*
  * If we use this method - we must manually refer to the key
@@ -153,28 +143,25 @@ void checkRow1(void) {
 	wait_us(250);
 
 	/*
-	 * Row 1 of the keypad corresponds to waveform selection
+	 * Row 1 of the keypad corresponds to editor options
 	 */
 	if (((FIO0PIN >> 17) & 0x01) == 1) {
-		printf("You have selected the square waveform.\n");
+		printf("You have selected the record option.\n");
+		recordDisp();
+		// TODO input command for record
 		wait_us(50000);
-		// TODO input command for square waveform & LCD display info
-		squareWave();
-		displayWords(square,squareLen);
 	}
 	if (((FIO0PIN >> 15) & 0x01) == 1) {
-		printf("You have selected the triangle waveform.\n");
+		printf("You have selected the playback option.\n");
+		playbackDisp();
+		// TODO input command for playback
 		wait_us(50000);
-		// TODO input command for triangle waveform & LCD display info
-		triangleWave();
-		displayWords(triangle,triangleLen);
 	}
 	if (((FIO0PIN >> 16) & 0x01) == 1) {
-		printf("You have selected the sine waveform.\n");
+		printf("You have selected the delete option.\n");
+		deleteDisp();
+		// TODO input command for delete
 		wait_us(50000);
-		// TODO input command for sine waveform & LCD display info
-		sineWave();
-		displayWords(sine,sineLen);
 	}
 	if (((FIO0PIN >> 23) & 0x01) == 1) {
 		printf("You have pressed A.\n");
@@ -188,7 +175,7 @@ void checkRow1(void) {
 }
 
 /*
- * Row 2 of the keypad corresponds to click track speed
+ * Row 2 of the keypad corresponds to waveform selection
  */
 void checkRow2(void) {
 
@@ -199,22 +186,23 @@ void checkRow2(void) {
 	 * Scan each Column input for high value
 	 */
 	if (((FIO0PIN >> 17) & 0x01) == 1) {
-		printf("You have selected the slow click track speed.\n");
+		printf("You have selected the square waveform.");
+		squareWaveDisp();
+		// TODO input command for square waveform
+
 		wait_us(50000);
-		// TODO input command for slow click track speed & LCD display info
-		slowClick();
 	}
 	if (((FIO0PIN >> 15) & 0x01) == 1) {
-		printf("You have selected the normal click track speed.\n");
+		printf("You have selected the triangle waveform.\n");
+		triangleWaveDisp();
+		// TODO input command for triangle waveform
 		wait_us(50000);
-		// TODO input command for normal click track speed & LCD display info
-		normalClick();
 	}
 	if (((FIO0PIN >> 16) & 0x01) == 1) {
-		printf("You have selected the high click track speed.\n");
+		printf("You have selected the sine waveform.\n");
+		sineWaveDisp();
+		// TODO input command for sine waveform
 		wait_us(50000);
-		// TODO input command for high click track speed & LCD display info
-		fastClick();
 	}
 	if (((FIO0PIN >> 23) & 0x01) == 1) {
 		printf("You have pressed B.\n");
@@ -228,7 +216,7 @@ void checkRow2(void) {
 }
 
 /*
- * Determine if a key in Row 3 has been pressed and prints test statement
+ * Row 3 of the keypad corresponds to click track speed selection
  */
 void checkRow3(void) {
 
@@ -239,15 +227,21 @@ void checkRow3(void) {
 	 * Scan each Column input for high value
 	 */
 	if (((FIO0PIN >> 17) & 0x01) == 1) {
-		printf("You have pressed 7.\n");
+		printf("You have selected the slow click track speed.\n");
+		slowClickDisp();
+		// TODO input command for slow click track
 		wait_us(50000);
 	}
 	if (((FIO0PIN >> 15) & 0x01) == 1) {
-		printf("You have pressed 8.\n");
+		printf("You have selected the normal click track speed.\n");
+		normalClickDisp();
+		// TODO input command for normal click track
 		wait_us(50000);
 	}
 	if (((FIO0PIN >> 16) & 0x01) == 1) {
-		printf("You have pressed 9.\n");
+		printf("You have selected the fast click track speed.\n");
+		fastClickDisp();
+		// TODO input command for fast click track
 		wait_us(50000);
 	}
 	if (((FIO0PIN >> 23) & 0x01) == 1) {
@@ -261,7 +255,7 @@ void checkRow3(void) {
 }
 
 /*
- * Determine if a key in Row 4 has been pressed and prints test statement
+ * Reset editor application by selecting "*"
  */
 void checkRow4(void) {
 
@@ -272,7 +266,8 @@ void checkRow4(void) {
 	 * Scan each Column input for high value
 	 */
 	if (((FIO0PIN >> 17) & 0x01) == 1) {
-		printf("You have pressed *.\n");
+		printf("You have selected the reset option.\n");
+		// TODO input command for reset & LCD display info
 		wait_us(50000);
 	}
 	if (((FIO0PIN >> 15) & 0x01) == 1) {
