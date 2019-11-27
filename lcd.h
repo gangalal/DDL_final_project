@@ -1,23 +1,12 @@
-/*
- ===============================================================================
- Name        : lcd.h
- Author      : $(author)
- Version     :
- Copyright   : $(copyright)
- Description : main definition
- ===============================================================================
- */
-
-#ifdef __USE_CMSIS
-#include "LPC17xx.h"
-#endif
+#ifndef LCD_H_
+#define LCD_H_
 
 #include <cr_section_macros.h>
 
 #include <stdio.h>
 #include <math.h>
 #include "Util.h"
-#include "timer.h"
+#include "timer0.h"
 
 /*
  * Initialize GPIO2 pins as outputs and set them low
@@ -106,3 +95,4 @@ void displayWords(int* array, int arraySize) {
 		 }
 	 }
 }
+#endif /* LCD_H_ */
