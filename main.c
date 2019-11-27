@@ -1,12 +1,12 @@
 /*
- ===============================================================================
- Name        : DDL_Final_Project.c
+===============================================================================
+ Name        : DanielWayofCodingFinalProject.c
  Author      : $(author)
  Version     :
  Copyright   : $(copyright)
  Description : main definition
- ===============================================================================
- */
+===============================================================================
+*/
 
 #ifdef __USE_CMSIS
 #include "LPC17xx.h"
@@ -17,59 +17,55 @@
 #include <stdio.h>
 
 #define PCONP (*(volatile unsigned int *)(0x400FC0C4))
-#define PCLKSEL0 (*(volatile unsigned int *)(0x400FC1A8)) 	// Timer 0 Clock select
-#define PCLKSEL1 (*(volatile unsigned int *)(0x400FC1AC)) 	// Timer 2 Clock select
+#define PCLKSEL0 (*(volatile unsigned int *)(0x400FC1A8))   // Timer 0 Clock select
+#define PCLKSEL1 (*(volatile unsigned int *)(0x400FC1AC))   // Timer 2 Clock select
 
 #define PINSEL0 (*(volatile unsigned int *)(0x4002C000))
 #define PINSEL1 (*(volatile unsigned int *)(0x4002C004))
 #define PINMODE0 (*(volatile unsigned int *)(0x4002C040))
-#define PINMODE1 (*(volatile unsigned int *)(0x4002c044))
+#define PINMODE1 (*(volatile unsigned int *)(0x4002C044))
 
-#define I2CPADCFG (*(volatile unsigned int *)(0x4002C07C)) // I2C for EEProm
+#define FIO0DIR (*(volatile unsigned int *)(0x2009c000))
+#define FIO0PIN (*(volatile unsigned int *)(0x2009c014))
+#define FIO2DIR (*(volatile unsigned int *)(0x2009c040))      // GPIO 2
+#define FIO2PIN (*(volatile unsigned int *)(0x2009c054))
+#define FIO2PIN0 (*(volatile unsigned char *)(0x2009C054))
+
+#define I2CPADCFG (*(volatile unsigned int *)(0x4002C07C))  // I2C for EEProm
 #define I2C0SCLH (*(volatile unsigned int *)(0x4001C010))
 #define I2C0SCLL (*(volatile unsigned int *)(0x4001C014))
 #define I2C0CONSET (*(volatile unsigned int *)(0x4001C000))
 #define I2C0CONCLR (*(volatile unsigned int *)(0x4001C018))
 #define I2C0DAT (*(volatile unsigned int *)(0x4001C008))
 
-
-#define T0TCR (*(volatile unsigned int *)(0x40004004)) 		// Timer 0
+#define T0TCR (*(volatile unsigned int *)(0x40004004))		// Timer 0
 #define T0TC (*(volatile unsigned int *)(0x40004008))		// Timer Counter
+#define T2TCR (*(volatile unsigned int *)(0x40090004))		// Timer 2 Timer Control Register
+#define T2TC (*(volatile unsigned int *)(0x40090008))		// Timer 2 Timer Counter
+#define T2EMR (*(volatile unsigned int *)(0x4009003C))		// EMR Match Register for Timer 2
+#define T2MCR (*(volatile unsigned int *)(0x40090014))		// MCR Match Register for Timer 2
+#define T2CTCR (*(volatile unsigned int *)(0x40090070))		// Count Control Register for Timer 2 Selects timer/counter mode
+#define T2MR3 (*(volatile unsigned int *)(0x40090024))		// Timer 2 Match Register 3
+#define T3TCR (*(volatile unsigned int *)(0x40094004))		// Timer 3 Timer Control Register
+#define T3TC (*(volatile unsigned int *)(0x40094008))		// Timer 3 Timer Counter
+#define T3EMR (*(volatile unsigned int *)(0x4009403C))		// EMR Match Register for Timer 3
+#define T3MCR (*(volatile unsigned int *)(0x40090014))		// MCR Match Register for Timer 3
+#define T3CTCR (*(volatile unsigned int *)(0x40090070))		// Count Control Register for Timer 3 - selects timer/counter Mode
+#define T3MR0 (*(volatile unsigned int *)(0x40090024))		// Timer 3 Match Register 0
 
-#define FIO0DIR (*(volatile unsigned int *)(0x2009c000))
-#define FIO0PIN (*(volatile unsigned int *)(0x2009c014))
-#define FIO2DIR (*(volatile unsigned int *)0x2009c040)
-#define FIO2PIN (*(volatile unsigned int *)0x2009c054)
-#define FIO2PIN0 (*(volatile unsigned char *)0x2009C054)
+#define DACR (*(volatile unsigned int *)(0x4008C000))       // DAC Register
 
-#define T2TCR (*(volatile unsigned int *)(0x40090004)) 		// Timer 2 Timer Control Register
-#define T2TC (*(volatile unsigned int *)(0x40090008)) 		// Timer 2 Timer Counter
-#define T2EMR (*(volatile unsigned int *)(0x4009003C)) 		// EMR Match Register for Timer 2
-#define T2MCR (*(volatile unsigned int *)(0x40090014)) 		// MCR Match Register for Timer 2
-#define T2CTCR (*(volatile unsigned int *)(0x40090070)) 	// Count Control Register for Timer 2 Selects between timer and counter mode
-#define T2MR3 (*(volatile unsigned int *)(0x40090024)) 		// Match Register 3
-
-#define DACR (*(volatile unsigned int *)(0x4008C000)) 		// DAC Register
-
-// UART0 for MIDI
 #define U0LCR (*(volatile unsigned int *)(0x4000C00C))
 #define U0DLL (*(volatile unsigned int *)(0x4000C000))
 #define U0DLM (*(volatile unsigned int *)(0x4000C004))
-#define U0FDR (*(volatile unsigned int *)(0x4000C028))
+#define U0FDR (*(volatile unsigned int *)(0x4000C028))      //fractional dividing register
 #define U0FCR (*(volatile unsigned int *)(0x4000C008))
 #define U0ACR (*(volatile unsigned int *)(0x4000C020))
-#define U0RBR (*(volatile unsigned int *)(0x4000C000))
+#define U0TER (*(volatile unsigned int *)(0x4000C030))
 #define U0LSR (*(volatile unsigned int *)(0x4000C014))
-
-//** LCD Display is wired to our LPC as follows:
-//** DB0-DB7 -> pins 42-49
-//** E (Enable) -> pin 50 (p2.8)
-//** Rs (data/instruction) -> pin 52 (p2.11)
+#define U0RBR (*(volatile unsigned int *)(0x4000c000))
 
 // Configure MIDI Keyboard for inputs
-
-// Configure GPIO pins for output to write to LCD display
-
 struct _MIDIData {
 	int key;
 	int velocity;
@@ -78,139 +74,18 @@ struct _MIDIData {
 
 typedef struct _MIDIData MIDIData; //defining struct type
 
-MIDIData receivedData[8];
+MIDIData receivedData[25];
 
-
-void GPIOInit() {
-	FIO2DIR |= (1 << 0);
-	FIO2DIR |= (1 << 1);
-	FIO2DIR |= (1 << 2);
-	FIO2DIR |= (1 << 3);
-	FIO2DIR |= (1 << 4);
-	FIO2DIR |= (1 << 5);
-	FIO2DIR |= (1 << 6);
-	FIO2DIR |= (1 << 7);
-	FIO2DIR |= (1 << 8);
-	FIO2DIR |= (1 << 11);
-
-// set all pins low initially
-	FIO2PIN &= ~(1 << 0);
-	FIO2PIN &= ~(1 << 1);
-	FIO2PIN &= ~(1 << 2);
-	FIO2PIN &= ~(1 << 3);
-	FIO2PIN &= ~(1 << 4);
-	FIO2PIN &= ~(1 << 5);
-	FIO2PIN &= ~(1 << 6);
-	FIO2PIN &= ~(1 << 7);
-	FIO2PIN &= ~(1 << 8);
-	FIO2PIN &= ~(1 << 11);
-}
-
-
-// I2C initialize
-void I2CInit() {
-	PCONP |= (1 << 7); //resetting power control for I2C0
-	PCLKSEL0 &= ~(1 << 15) | (1 << 14); // resetting clock selection
-	PCLKSEL0 |= (0 << 15) | (0 << 14); //dividing CCLK by 8 *needs to review
-	// set high and low clk time for 1MHz clk/10 = 100kHz
-	I2C0SCLH = 5;
-	I2C0SCLL = 5;
-	PINSEL1 |= (1 << 22) | (0 << 23); //enabling SDA0 on pin p0.27
-	PINSEL1 |= (1 << 24) | (0 << 25); //enabling SCL0 on pin p0.28
-	//I2CPADCFG |= (0<<2); //configuring I2C0 register to standard mode
-	I2C0CONSET = (1 << 6);
-}
-
-// I2C Start Function
-void I2CStart() {
-	I2C0CONSET = (1 << 3); //set SI while configuring other bits
-	I2C0CONSET = (1 << 5); //set STA to start condition
-	I2C0CONCLR = (1 << 3); //clear SI to active state machine
-	while (((I2C0CONSET >> 3) & 1) == 0) {
-		//wait for start condition to be set
-	}
-	I2C0CONCLR = (1 << 5); //clear STA
-}
-
-// I2C write function
-void I2CWrite(int data) {
-	I2C0DAT = data;
-	I2C0CONCLR = (1 << 3); //clear SI to standard data
-	while (((I2C0CONSET >> 3) & 1) == 0) {
-		//wait for write condition to be set
-	}
-
-	//check I2C0STAT for ack or nak
-}
-
-// I2C read function
-int I2CRead(int ack) {
-	if (ack) {
-		I2C0CONSET = (1 << 2);
-	} else {
-		I2C0CONCLR = (1 << 2);
-	}
-	//I2C0CONCLR = (1 << 2);
-	I2C0CONCLR = (1 << 3); //clear SI to start read
-	while (((I2C0CONSET >> 3) & 1) == 0) {
-		//wait for read condition to be set
-	}
-
-	return I2C0DAT;
-}
-
-// I2C Stop Function
-void I2CStop() {
-	I2C0CONSET = (1 << 4); //set STO to request stop condition
-	I2C0CONCLR = (1 << 3); //clear SI to active state machine
-	while (((I2C0CONSET >> 4) & 1) == 1) {
-		//wait for stop condition to be set
-	}
-}
-
-void memWrite(int data) {
-	int addr = 0b1010000; // EEprom address
-	I2CStart();
-	I2CWrite(addr << 1); // last bit 0 for write
-	I2CWrite(32); // address to write to
-	for (int i = 0; i<25; i++){ // index array values
-		I2CWrite(data[i]); // write in array index value
-	}
-	I2CStop();
-	wait_us(100);
-}
-
-void memRead(int data) {
-	int addr = 0b1010000; // EEprom address
-	int count = 0;
-	I2CStart();
-	I2CWrite(addr << 1); // last bit 0 for write
-	I2CWrite(32);
-	I2CStart();
-	I2CWrite((addr << 1) + 1); // last bit shifted to 1 for read
-	for (int i = 0; i<25;i++) {
-		if (i<24) {
-			int tester = I2CRead(1);
-			if (tester == data[i]){
-				count++;
-		  } else {
-			int tester = I2CRead(0);
-				if (tester == data[i]) {
-				count++;
-				}
-			}
-
-			}
-		}
-	I2CStop();
-	wait_us(100);
-	if (count == 25) { // if the counter sees the correct 25 notes
-		// insert printf command or LCD screen shot
-
-}
-
-
-
+/*
+ * Declare and define waveform displays for LCD
+ */
+int square [] = {0x43, 0x68, 0x6f, 0x6f, 0x73, 0x65, 0x20, 0x77, 0x61, 0x76, 0x65, 0x66, 0x6f, 0x72, 0x6d};
+int squareLen = sizeof(square);
+int triangle [] = {0x5E, 0x5E, 0x5E, 0x5E, 0x5E, 0x5E, 0x5E, 0x5E, 0x5E, 0x5E, 0x5E, 0x5E};
+int triangleLen = sizeof(triangle);
+// TODO Need to figure this out
+int sine [] = {0x42, 0x5E, 0x5E, 0x5E, 0x5E, 0x5E, 0x5E, 0x5E, 0x5E};
+int sineLen = sizeof(sine);
 
 /**
  *  Start Timer 0
@@ -278,7 +153,6 @@ void wait_ticks(unsigned long count) {
 
 		}
 	}
-
 }
 
 /**
@@ -354,8 +228,6 @@ void matchFreq(int freq) {
 
 }
 
-
-
 // for calculated wait time, generate desired waveform
 void genFreq(int waitTime) {
 	for (int i = 0; i < 1023; i++) {
@@ -364,6 +236,101 @@ void genFreq(int waitTime) {
 		DACR = 0;
 		wait_us(waitTime);
 	}
+}
+
+/**
+ * Start Timer 3
+ */
+static inline void timer3Start() {
+	T3TCR |= (1 << 0);
+}
+
+/**
+ * Reset Timer 3
+ */
+static inline void timer3Reset() {
+	T3TCR |= (1 << 1);
+	while (T3TC != 0) {
+		// wait until timer has changed
+	}
+	T3TCR &= ~(1 << 1);	//
+}
+
+/*
+ * Read Timer 3 in microseconds
+ */
+int timer3Read_us() {
+
+	return T0TC; // Read Timer 0 Counter
+
+}
+
+/*
+ * Wait function for Timer 3 in microseconds
+ */
+void wait3_us(int usec) {
+
+	timer3Start();
+	timer3Reset();
+	while(timer3Read_us() < usec) {
+	}
+}
+
+
+/**
+ * Initialize Timer 3 to control the timing of decay for each tone
+ */
+void timer3Init() {
+	PCONP |= (1 << 23);		// Timer 2 Enable
+	PCLKSEL1 &= ~(1 << 14); // Reset clock selection on Timer 2, default = 1MHz
+	PCLKSEL1 &= ~(1 << 15); // Reset clock selection on Timer 2, default = 1MHz
+	PINSEL0 |= (1 << 20);	// Select Timer 2, Match register 3 on LPC P0.9
+	PINSEL0 |= (1 << 21); // Select Timer 2, Match register 3 on LPC P0.9
+	T3MCR |= (1 << 1);	// Set Reset on MR3, TC will be reset if MR3 matches it
+	T3EMR |= (3 << 4); // Toggle on match EMC3
+	T3CTCR &= ~(1 << 0);
+	T3CTCR &= ~(1 << 1);
+	timer3Start();
+
+}
+
+/**
+ * Configure Timer 3 for frequency generation
+ */
+void configT3MR0(int freq) {
+	timer0Reset();			// Reset Timer 0
+	T3MR0 = (1000000 / (2 * freq));	// load T2MR3 with match value based on frequency PCLK/(2*freq)
+	timer3Reset();
+}
+
+//** LCD Display is wired to our LPC as follows:
+//** DB0-DB7 -> pins 42-49
+//** E (Enable) -> pin 50 (p2.8)
+//** Rs (data/instruction) -> pin 52 (p2.11)
+// Configure GPIO pins for output to write to LCD display
+void lcdInit() {
+	FIO2DIR |= (1 << 0);
+	FIO2DIR |= (1 << 1);
+	FIO2DIR |= (1 << 2);
+	FIO2DIR |= (1 << 3);
+	FIO2DIR |= (1 << 4);
+	FIO2DIR |= (1 << 5);
+	FIO2DIR |= (1 << 6);
+	FIO2DIR |= (1 << 7);
+	FIO2DIR |= (1 << 8);
+	FIO2DIR |= (1 << 11);
+
+// set all pins low initially
+	FIO2PIN &= ~(1 << 0);
+	FIO2PIN &= ~(1 << 1);
+	FIO2PIN &= ~(1 << 2);
+	FIO2PIN &= ~(1 << 3);
+	FIO2PIN &= ~(1 << 4);
+	FIO2PIN &= ~(1 << 5);
+	FIO2PIN &= ~(1 << 6);
+	FIO2PIN &= ~(1 << 7);
+	FIO2PIN &= ~(1 << 8);
+	FIO2PIN &= ~(1 << 11);
 }
 
 // Configure LCD Instruction for commands
@@ -385,12 +352,12 @@ void LCDinitCmd(void) {
 }
 
 // Configure LCD Instruction for Characters
-void LCDchar(int data) {
-	FIO2PIN |= (1 << 11); // Set Rs = 1 for character (bit 11 goes high)
-	FIO2PIN0 = data; // set up DB0 - DB7 for ASCII codes for characters
-	FIO2PIN |= (1 << 8); // pulse E high
-	FIO2PIN &= ~(1 << 8); // pulse E low
-	wait_us(100); // wait 100 usec
+ void LCDchar(int data) {
+	 FIO2PIN0 = data; // set up DB0 - DB7 for ASCII codes for characters
+	 FIO2PIN |= (1 << 11); // Set Rs = 1 for character (bit 11 goes high)
+	 FIO2PIN |= (1 << 8); // pulse E high
+	 FIO2PIN &= ~(1 << 8); // pulse E low
+	 wait_us(100); // wait 100 usec
 }
 
 // Initialize LCD (CHARACTERS) ** optional can call from main as well
@@ -402,6 +369,9 @@ void LCDinitChar(void) {
 	wait_us(4000); // wait 4ms to clear display
 }
 
+/*
+ * Write a single character to LCD display
+ */
 void displayChar(int data) {
 	FIO2PIN0 = data;
 	FIO2PIN |= (1 << 11); //set Rs high
@@ -410,7 +380,19 @@ void displayChar(int data) {
 	wait_us(100); // wait 100 usec
 }
 
-//*** NEED TO CREATE A 3RD FUNCTION SIMILAR TO THOSE ABOVE TO TAKE IN A STRING AND DISPLAY ALL CHARACTERS***
+/*
+ * Write words to LCD display
+ */
+void displayWords(int* array, int arraySize) {
+	 for(int i = 0; i<arraySize; i++) {
+	 	displayChar(array[i]);
+	 }
+	 if (arraySize<20) {
+		 for(int i = 0; i <(20-arraySize); i++) {
+			 displayChar(0x20);
+		 }
+	 }
+}
 
 void configMIDI() {
 	PCONP |= (1 << 3); //on reset UART is enable
@@ -433,6 +415,107 @@ void configMIDI() {
 	U0LCR &= ~(1 << 7); // needs to clear
 }
 
+
+// I2C initialize
+void I2CInit() {
+	PCONP |= (1 << 7); //resetting power control for I2C0
+	PCLKSEL0 &= ~(1 << 15) | (1 << 14); // resetting clock selection
+	PCLKSEL0 |= (0 << 15) | (0 << 14); //dividing CCLK by 8 *needs to review
+	// set high and low clk time for 1MHz clk/10 = 100kHz
+	I2C0SCLH = 5;
+	I2C0SCLL = 5;
+	PINSEL1 |= (1 << 22) | (0 << 23); //enabling SDA0 on pin p0.27
+	PINSEL1 |= (1 << 24) | (0 << 25); //enabling SCL0 on pin p0.28
+	//I2CPADCFG |= (0<<2); //configuring I2C0 register to standard mode
+	I2C0CONSET = (1 << 6);
+}
+
+// I2C Start Function
+void I2CStart() {
+	I2C0CONSET = (1 << 3); //set SI while configuring other bits
+	I2C0CONSET = (1 << 5); //set STA to start condition
+	I2C0CONCLR = (1 << 3); //clear SI to active state machine
+	while (((I2C0CONSET >> 3) & 1) == 0) {
+		//wait for start condition to be set
+	}
+	I2C0CONCLR = (1 << 5); //clear STA
+}
+
+// I2C write function
+void I2CWrite(int data) {
+	I2C0DAT = data;
+	I2C0CONCLR = (1 << 3); //clear SI to standard data
+	while (((I2C0CONSET >> 3) & 1) == 0) {
+		//wait for write condition to be set
+	}
+
+	//check I2C0STAT for ack or nak
+}
+
+// I2C read function
+int I2CRead(int ack) {
+	if (ack) {
+		I2C0CONSET = (1 << 2);
+	} else {
+		I2C0CONCLR = (1 << 2);
+	}
+	//I2C0CONCLR = (1 << 2);
+	I2C0CONCLR = (1 << 3); //clear SI to start read
+	while (((I2C0CONSET >> 3) & 1) == 0) {
+		//wait for read condition to be set
+	}
+
+	return I2C0DAT;
+}
+
+// I2C Stop Function
+void I2CStop() {
+	I2C0CONSET = (1 << 4); //set STO to request stop condition
+	I2C0CONCLR = (1 << 3); //clear SI to active state machine
+	while (((I2C0CONSET >> 4) & 1) == 1) {
+		//wait for stop condition to be set
+	}
+}
+
+void memWrite(int* data) {
+	int addr = 0b1010000; // EEprom address
+	I2CStart();
+	I2CWrite(addr << 1); // last bit 0 for write
+	I2CWrite(32); // address to write to
+	for (int i = 0; i<25; i++){ // index array values
+		I2CWrite(data[i]); // write in array index value
+	}
+	I2CStop();
+	wait_us(100);
+}
+
+void memRead(int* data) {
+	int addr = 0b1010000; // EEprom address
+	int count = 0;
+	I2CStart();
+	I2CWrite(addr << 1); // last bit 0 for write
+	I2CWrite(32);
+	I2CStart();
+	I2CWrite((addr << 1) + 1); // last bit shifted to 1 for read
+	for (int i = 0; i<25;i++) {
+		if (i<24) {
+			int tester = I2CRead(1);
+			if (tester == data[i]){
+				count++;
+		  } else {
+			int tester = I2CRead(0);
+				if (tester == data[i]) {
+				count++;
+				}
+			}
+		}
+	}
+	I2CStop();
+	wait_us(100);
+	if (count == 25) { // if the counter sees the correct 25 notes
+		// insert printf command or LCD screen shot
+
+}
 
 void playMIDIByte(int byte) {
 	if (byte == 0x3c) {
@@ -478,11 +561,10 @@ void readMIDIByte(int byte) {
 		playMIDIByte(byte);
 //		U0FCR |= (1 << 1); // clear FIFO Rx
 //		receivedData[0].key = byte;
-	//	receivedData[0].flag = 1;
+//		receivedData[0].flag = 1;
 
 	}
-
-
+}
 
 //	if (byte == 0x7f) {
 //			receivedData[0].velocity = byte;
@@ -491,11 +573,53 @@ void readMIDIByte(int byte) {
 }
 
 /*
+ * Generate a square waveform
+ */
+void squareWave(void) {
+
+}
+
+/*
+ * Generate a triangle waveform
+ */
+void triangleWave(void) {
+
+}
+
+/*
+ * Generate a sine waveform
+ */
+void sineWave(void) {
+
+}
+
+/*
+ * Generate a slow click track
+ */
+void slowClick(void) {
+
+}
+
+/*
+ * Generate a normal click track
+ */
+void normalClick(void) {
+
+}
+
+/*
+ * Generate a fast click track
+ */
+void fastClick(void) {
+
+}
+
+/*
  * Initialize pins as inputs and outputs
  * Initialize pull-up/pull-down resistors
  * for the 4x4 keypad
  */
-void initKeypadIO(void) {
+void keypadInit(void) {
 
 	/*
 	 * Set pins 8-11 as outputs - "rows"
@@ -609,16 +733,22 @@ void checkRow1(void) {
 		printf("You have selected the square waveform.\n");
 		wait_us(50000);
 		// TODO input command for square waveform & LCD display info
+		squareWave();
+		displayWords(square,squareLen);
 	}
 	if (((FIO0PIN >> 15) & 0x01) == 1) {
 		printf("You have selected the triangle waveform.\n");
 		wait_us(50000);
 		// TODO input command for triangle waveform & LCD display info
+		triangleWave();
+		displayWords(triangle,triangleLen);
 	}
 	if (((FIO0PIN >> 16) & 0x01) == 1) {
 		printf("You have selected the sine waveform.\n");
 		wait_us(50000);
 		// TODO input command for sine waveform & LCD display info
+		sineWave();
+		displayWords(sine,sineLen);
 	}
 	if (((FIO0PIN >> 23) & 0x01) == 1) {
 		printf("You have pressed A.\n");
@@ -646,22 +776,24 @@ void checkRow2(void) {
 		printf("You have selected the slow click track speed.\n");
 		wait_us(50000);
 		// TODO input command for slow click track speed & LCD display info
+		slowClick();
 	}
 	if (((FIO0PIN >> 15) & 0x01) == 1) {
 		printf("You have selected the normal click track speed.\n");
 		wait_us(50000);
 		// TODO input command for normal click track speed & LCD display info
+		normalClick();
 	}
 	if (((FIO0PIN >> 16) & 0x01) == 1) {
 		printf("You have selected the high click track speed.\n");
 		wait_us(50000);
 		// TODO input command for high click track speed & LCD display info
+		fastClick();
 	}
 	if (((FIO0PIN >> 23) & 0x01) == 1) {
 		printf("You have pressed B.\n");
 		wait_us(50000);
 	}
-
 	wait_us(50000);
 	rowReset();
 	wait_us(250);
@@ -757,7 +889,7 @@ int main(void) {
 	timer0Init();
 	timer2Init();
 
-	/*GPIOInit();
+	/*lcdInit();
 	 timer0Init();
 	 //LCDinitCmd();
 	 LCDinitChar();
@@ -767,17 +899,13 @@ int main(void) {
 	configMIDI(); // configure MIDI keyboard
 	wait_us(100);
 
-	initKeypadIO();	// configure 4x4 keypad
+	keypadInit();	// configure 4x4 keypad
 	wait_us(100);
 
 	unsigned char bytearray[25]; // create an empty char array to hold 25 bytes (one for each note played)
 
 	while (1) {
-		keyScan();
-		U0LCR &= ~(1 << 7); // must be zero to access RBR
-		readMIDIByte(U0RBR); // read buffer register bytes into function
 
 	}
 	return 0;
 }
-
