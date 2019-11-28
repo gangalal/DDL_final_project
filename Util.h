@@ -32,6 +32,11 @@
   return thetime;
 }
 
+#if !defined(size)
+#define size(x) (sizeof((x))/sizeof((x)[0]))
+#endif
+
+
 // What is the current time
 #define DATE_STRING currentTime ()
 
