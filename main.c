@@ -7,6 +7,15 @@
  Description : main definition
 ===============================================================================
 */
+/*
+===============================================================================
+ Name        : DanielWayofCodingFinalProject.c
+ Author      : $(author)
+ Version     :
+ Copyright   : $(copyright)
+ Description : main definition
+===============================================================================
+*/
 
 #ifdef __USE_CMSIS
 #include "LPC17xx.h"
@@ -15,6 +24,9 @@
 #include <cr_section_macros.h>
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
 
 #define PCONP (*(volatile unsigned int *)(0x400FC0C4))
 #define PCLKSEL0 (*(volatile unsigned int *)(0x400FC1A8))   // Timer 0 Clock select
@@ -27,9 +39,9 @@
 
 #define FIO0DIR (*(volatile unsigned int *)(0x2009c000))
 #define FIO0PIN (*(volatile unsigned int *)(0x2009c014))
-#define FIO2DIR (*(volatile unsigned int *)(0x2009c040))      // GPIO 2
-#define FIO2PIN (*(volatile unsigned int *)(0x2009c054))
-#define FIO2PIN0 (*(volatile unsigned char *)(0x2009C054))
+#define FIO2DIR (*(volatile unsigned int *)0x2009c040)      // GPIO 2
+#define FIO2PIN (*(volatile unsigned int *)0x2009c054)
+#define FIO2PIN0 (*(volatile unsigned char *)0x2009C054)
 
 #define I2CPADCFG (*(volatile unsigned int *)(0x4002C07C))  // I2C for EEProm
 #define I2C0SCLH (*(volatile unsigned int *)(0x4001C010))
@@ -38,19 +50,19 @@
 #define I2C0CONCLR (*(volatile unsigned int *)(0x4001C018))
 #define I2C0DAT (*(volatile unsigned int *)(0x4001C008))
 
-#define T0TCR (*(volatile unsigned int *)(0x40004004))		// Timer 0
-#define T0TC (*(volatile unsigned int *)(0x40004008))		// Timer Counter
-#define T2TCR (*(volatile unsigned int *)(0x40090004))		// Timer 2 Timer Control Register
-#define T2TC (*(volatile unsigned int *)(0x40090008))		// Timer 2 Timer Counter
-#define T2EMR (*(volatile unsigned int *)(0x4009003C))		// EMR Match Register for Timer 2
-#define T2MCR (*(volatile unsigned int *)(0x40090014))		// MCR Match Register for Timer 2
-#define T2CTCR (*(volatile unsigned int *)(0x40090070))		// Count Control Register for Timer 2 Selects timer/counter mode
-#define T2MR3 (*(volatile unsigned int *)(0x40090024))		// Timer 2 Match Register 3
+#define T0TCR (*(volatile unsigned int *)(0x40004004))      // Timer 0
+#define T0TC (*(volatile unsigned int *)(0x40004008))       // Timer Counter
+#define T2TCR (*(volatile unsigned int *)(0x40090004))      // Timer 2 Timer Control Register
+#define T2TC (*(volatile unsigned int *)(0x40090008))       // Timer 2 Timer Counter
+#define T2EMR (*(volatile unsigned int *)(0x4009003C))      // EMR Match Register for Timer 2
+#define T2MCR (*(volatile unsigned int *)(0x40090014))      // MCR Match Register for Timer 2
+#define T2CTCR (*(volatile unsigned int *)(0x40090070))     // Count Control Register for Timer 2 Selects timer/counter mode
+#define T2MR3 (*(volatile unsigned int *)(0x40090024))      // Timer 2 Match Register 3
 #define T3TCR (*(volatile unsigned int *)(0x40094004))		// Timer 3 Timer Control Register
 #define T3TC (*(volatile unsigned int *)(0x40094008))		// Timer 3 Timer Counter
 #define T3EMR (*(volatile unsigned int *)(0x4009403C))		// EMR Match Register for Timer 3
 #define T3MCR (*(volatile unsigned int *)(0x40090014))		// MCR Match Register for Timer 3
-#define T3CTCR (*(volatile unsigned int *)(0x40090070))		// Count Control Register for Timer 3 - selects timer/counter Mode
+#define T3CTCR (*(volatile unsigned int *)(0x40094070))		// Count Control Register for Timer 3 - selects timer/counter Mode
 #define T3MR0 (*(volatile unsigned int *)(0x40090024))		// Timer 3 Match Register 0
 
 #define DACR (*(volatile unsigned int *)(0x4008C000))       // DAC Register
@@ -68,7 +80,7 @@
 // Configure MIDI Keyboard for inputs
 struct _MIDIData {
 	int key;
-	int velocity;
+	int order;
 	int flag;
 };
 
@@ -256,27 +268,6 @@ static inline void timer3Reset() {
 	T3TCR &= ~(1 << 1);	//
 }
 
-/*
- * Read Timer 3 in microseconds
- */
-int timer3Read_us() {
-
-	return T0TC; // Read Timer 0 Counter
-
-}
-
-/*
- * Wait function for Timer 3 in microseconds
- */
-void wait3_us(int usec) {
-
-	timer3Start();
-	timer3Reset();
-	while(timer3Read_us() < usec) {
-	}
-}
-
-
 /**
  * Initialize Timer 3 to control the timing of decay for each tone
  */
@@ -301,6 +292,17 @@ void configT3MR0(int freq) {
 	timer0Reset();			// Reset Timer 0
 	T3MR0 = (1000000 / (2 * freq));	// load T2MR3 with match value based on frequency PCLK/(2*freq)
 	timer3Reset();
+	while (timer0Read_us() < 2000000.0) {
+		int aout = (1 - (timer0Read_us() / 2000000.0)) * 1023.0;
+		DACR = aout << 6;
+	}
+}
+
+// play frequencies through match register (NO AOUT)
+void timer3genFreq(int freq) {
+	timer0Reset();			// Reset Timer 0
+	T2MR3 = (1000000 / (2 * freq));	// load T2MR3 with match value based on frequency PCLK/(2*freq)
+	timer2Reset();
 }
 
 //** LCD Display is wired to our LPC as follows:
@@ -390,6 +392,22 @@ void displayWords(int* array, int arraySize) {
 	 if (arraySize<20) {
 		 for(int i = 0; i <(20-arraySize); i++) {
 			 displayChar(0x20);
+		 }
+	 }
+}
+
+/*
+ * Write words to LCD display
+ */
+void displayWords2(char* array, int arraySize) {
+	 for(int i = 0; i<arraySize; i++) {
+		// Cast array to be
+	 	displayChar((int)array[i]);
+	 }
+	 if (arraySize<20) {
+		 for(int i = 0; i <(20-arraySize); i++) {
+			 // This is a constant character, use this for visual representation
+			 displayChar(' ');
 		 }
 	 }
 }
@@ -514,69 +532,61 @@ void memRead(int* data) {
 	wait_us(100);
 	if (count == 25) { // if the counter sees the correct 25 notes
 		// insert printf command or LCD screen shot
-
+	}
 }
 
 void playMIDIByte(int byte) {
 	if (byte == 0x3c) {
 		matchFreq(259);		// play middle c (C4)
-		memWrite(byte);
 		U0FCR |= (1 << 1); // clear FIFO Rx
 	} else if (byte == 0x3e) {
 		matchFreq(291);		// play D4
-		memWrite(byte);
 		U0FCR |= (1 << 1); // clear FIFO Rx
 	} else if (byte == 0x40) {
 		matchFreq(327);		// play E4
-		memWrite(byte);
 		U0FCR |= (1 << 1); // clear FIFO Rx
 	} else if (byte == 0x41) {
 		matchFreq(347);		// play F4
-		memWrite(byte);
 		U0FCR |= (1 << 1); // clear FIFO Rx
 	} else if (byte == 0x43) {
 		matchFreq(389);		// play G4
-		memWrite(byte);
 		U0FCR |= (1 << 1); // clear FIFO Rx
 	} else if (byte == 0x45) {
 		matchFreq(437);		// play A4
-		memWrite(byte);
 		U0FCR |= (1 << 1); // clear FIFO Rx
 	} else if (byte == 0x47) {
 		matchFreq(490);		// play B4
-		memWrite(byte);
 		U0FCR |= (1 << 1); // clear FIFO Rx
 	} else if (byte == 0x48) {
 		matchFreq(519);		// play C5 (full octave)
-		memWrite(byte);
 		U0FCR |= (1 << 1); // clear FIFO Rx
 	}
 
 }
 
-void readMIDIByte(int byte) {
+/*
+ * I CHANGED THIS TO TAKE TWO PARAMETERS!!!!
+ * This function should take in two bytes from the MIDI
+ * The first byte means note on
+ * The second byte denotes what note is played
+ */
+void readMIDIByte(int byte1,int byte2) {
 	if (((U0LSR >> 0) & 1) == 1) {
-		if (byte == 0x90);
+		if (byte1 == 0x90) {
 //		printf("data in %x\n", byte);
-		playMIDIByte(byte);
+			playMIDIByte(byte2);
+		}
 //		U0FCR |= (1 << 1); // clear FIFO Rx
 //		receivedData[0].key = byte;
 //		receivedData[0].flag = 1;
-
 	}
-}
-
-//	if (byte == 0x7f) {
-//			receivedData[0].velocity = byte;
-//			//printf("Middle C %x\n", byte);
-//		}
 }
 
 /*
  * Generate a square waveform
  */
 void squareWave(void) {
-
+	//timer2genFreq();
 }
 
 /*
@@ -597,22 +607,193 @@ void sineWave(void) {
  * Generate a slow click track
  */
 void slowClick(void) {
-
+	timer3genFreq(100);
 }
 
 /*
  * Generate a normal click track
  */
 void normalClick(void) {
-
+	timer3genFreq(200);
 }
 
 /*
  * Generate a fast click track
  */
 void fastClick(void) {
-
+	timer3genFreq(300);
 }
+
+/*
+ * "Welcome to our game!"
+ */
+void welcomeDisp(void) {
+	char welcome[] = "Welcome to our game!";
+	displayWords2(welcome,(sizeof(welcome)-1));
+	wait_us(250);
+}
+
+/*
+ * "Select from the following options using the keypad:"
+ */
+void options1Prompt(void) {
+	char options1[] = "Select from the following options using the keypad:";
+	displayWords2(options1,(sizeof(options1)-1));
+	wait_us(250);
+}
+
+/*
+ * "1) Record
+ *  2) Playback
+ *  3) Delete
+ *  *) Reset"
+ */
+void options2Prompt(void) {
+	char options2[] = "1) Record \n 2) Playback \n 3) Delete \n *) Reset";
+	displayWords2(options2,(sizeof(options2)-1));
+	wait_us(250);
+}
+
+/*
+ * "You have selected the record option."
+ */
+void recordDisp(void) {
+	char record[] = "You have selected the record option.";
+	displayWords2(record,(sizeof(record)-1));
+	wait_us(250);
+}
+
+/*
+ * "You have selected the playback option."
+ */
+void playbackDisp(void) {
+	char playback[] = "You have selected the playback option.";
+	displayWords2(playback,(sizeof(playback)-1));
+	wait_us(250);
+}
+
+/*
+ * "You have selected the delete option."
+ */
+void deleteDisp(void) {
+	char delete[] = "You have selected the delete option.";
+	displayWords2(delete,(sizeof(delete)-1));
+	wait_us(250);
+}
+
+/*
+ * "You have selected the reset option. Press * to continue."
+ */
+void resetDisp(void) {
+	char reset[] = "You have selected the reset option. Press * to continue.";
+	displayWords2(reset,(sizeof(reset)-1));
+	wait_us(250);
+}
+/*
+ * "Please select from the following waveform options using the keypad:"
+ */
+void waveform1Prompt(void) {
+	char waveform1[] = "Please select from the following waveform options using the keypad:";
+	displayWords2(waveform1,(sizeof(waveform1)-1));
+	wait_us(250);
+}
+
+/*
+ * "4) Square Waveform
+ *  5) Triangle Waveform
+ *  6) Sine Waveform
+ *  *) Reset
+ */
+void waveform2Prompt(void) {
+	char waveform2[] = "4) Square Waveform \n 5) Triangle Waveform \n 6) Sine Waveform \n *) Reset";
+	displayWords2(waveform2,(sizeof(waveform2)-1));
+	wait_us(250);
+}
+
+/*
+ * "You have selected the square waveform."
+ */
+void squareWaveDisp(void) {
+	char square[] = "You have selected the square waveform.";
+	displayWords2(square,(sizeof(square)-1));
+	wait_us(250);
+}
+
+/*
+ * "You have selected the triangle waveform."
+ */
+void triangleWaveDisp(void) {
+	char triangle[] = "You have selected the triangle waveform.";
+	displayWords2(triangle,(sizeof(triangle)-1));
+	wait_us(250);
+}
+
+/*
+ * "You have selected the sine waveform."
+ */
+void sineWaveDisp(void) {
+	char sine[] = "You have selected the sine waveform.";
+	displayWords2(sine,(sizeof(sine)-1));
+	wait_us(250);
+}
+
+/*
+ * "You have selected the slow click track speed."
+ */
+void slowClickDisp(void) {
+	char slowClick[] = "You have selected the slow click track speed.";
+	displayWords2(slowClick,(sizeof(slowClick)-1));
+	wait_us(250);
+}
+
+/*
+ * "You have selected the normal click track speed."
+ */
+void normalClickDisp(void) {
+	char normalClick[] = "You have selected the normal click track speed.";
+	displayWords2(normalClick,(sizeof(normalClick)-1));
+	wait_us(250);
+}
+
+/*
+ * "You have selected the fast click track speed."
+ */
+void fastClickDisp(void) {
+	char fastClick[] = "You have selected the fast click track speed.";
+	displayWords2(fastClick,(sizeof(fastClick)-1));
+	wait_us(250);
+}
+
+/*
+ * Functions for selected options
+ */
+extern void recordOpt(void) {
+	// TODO record function
+}
+
+extern void playbackOpt(void){
+	// TODO playback function
+}
+
+extern void deleteOpt(void) {
+	// TODO delete function
+}
+
+extern void resetOpt(void) {
+	// TODO reset function
+}
+
+/*
+ * If we use this method - we have to be CAREFUL with syntax!
+ * keyTable[row][col]
+ *
+ * {{'1','2','3','A'},
+ * {'4','5','6','B'},
+ * {'7','8','9','C'},
+ * {'*','0','#','D'}};
+ *
+ */
+char otherKeyTable[4][4];
 
 /*
  * Initialize pins as inputs and outputs
@@ -651,6 +832,10 @@ void keypadInit(void) {
 	PINMODE1 |= (1 << 0) | (1 << 1);
 	PINMODE1 |= (1 << 14) | (1 << 15);
 
+	/*
+	 * Initialize key table to zero
+	 */
+	memset(otherKeyTable,0,sizeof(otherKeyTable));
 }
 
 /*
@@ -727,30 +912,36 @@ void checkRow1(void) {
 	wait_us(250);
 
 	/*
-	 * Row 1 of the keypad corresponds to waveform selection
+	 * Row 1 of the keypad corresponds to editor options
 	 */
 	if (((FIO0PIN >> 17) & 0x01) == 1) {
-		printf("You have selected the square waveform.\n");
+		if (otherKeyTable[0][0] == 0) {
+			recordDisp();
+			recordOpt();
+			memset(otherKeyTable[0],0,sizeof(otherKeyTable[0]));
+			otherKeyTable[0][0] = 1;
+		}
 		wait_us(50000);
-		// TODO input command for square waveform & LCD display info
-		squareWave();
-		displayWords(square,squareLen);
 	}
-	if (((FIO0PIN >> 15) & 0x01) == 1) {
-		printf("You have selected the triangle waveform.\n");
+	else if (((FIO0PIN >> 15) & 0x01) == 1) {
+		if (otherKeyTable[0][1]) {
+			playbackDisp();
+			playbackOpt();
+			memset(otherKeyTable[0],0,sizeof(otherKeyTable[0]));
+			otherKeyTable[0][1] = 1;
+		}
 		wait_us(50000);
-		// TODO input command for triangle waveform & LCD display info
-		triangleWave();
-		displayWords(triangle,triangleLen);
 	}
-	if (((FIO0PIN >> 16) & 0x01) == 1) {
-		printf("You have selected the sine waveform.\n");
+	else if (((FIO0PIN >> 16) & 0x01) == 1) {
+		if(otherKeyTable[0][2]) {
+			deleteDisp();
+			deleteOpt();
+			memset(otherKeyTable[0],0,sizeof(otherKeyTable[0]));
+			otherKeyTable[0][2] = 1;
+		}
 		wait_us(50000);
-		// TODO input command for sine waveform & LCD display info
-		sineWave();
-		displayWords(sine,sineLen);
 	}
-	if (((FIO0PIN >> 23) & 0x01) == 1) {
+	else if (((FIO0PIN >> 23) & 0x01) == 1) {
 		printf("You have pressed A.\n");
 		wait_us(50000);
 	}
@@ -762,7 +953,7 @@ void checkRow1(void) {
 }
 
 /*
- * Row 2 of the keypad corresponds to click track speed
+ * Row 2 of the keypad corresponds to waveform selection
  */
 void checkRow2(void) {
 
@@ -773,27 +964,37 @@ void checkRow2(void) {
 	 * Scan each Column input for high value
 	 */
 	if (((FIO0PIN >> 17) & 0x01) == 1) {
-		printf("You have selected the slow click track speed.\n");
+		if (otherKeyTable[1][0] == 0) {
+			squareWaveDisp();
+			squareWave();
+			memset(otherKeyTable[1],0,sizeof(otherKeyTable[1]));
+			otherKeyTable[1][0] = 1;
+		}
 		wait_us(50000);
-		// TODO input command for slow click track speed & LCD display info
-		slowClick();
 	}
-	if (((FIO0PIN >> 15) & 0x01) == 1) {
-		printf("You have selected the normal click track speed.\n");
+	else if (((FIO0PIN >> 15) & 0x01) == 1) {
+		if (otherKeyTable[1][1] == 0) {
+			triangleWaveDisp();
+			triangleWave();
+			memset(otherKeyTable[1],0,sizeof(otherKeyTable[1]));
+			otherKeyTable[1][1] = 1;
+		}
 		wait_us(50000);
-		// TODO input command for normal click track speed & LCD display info
-		normalClick();
 	}
-	if (((FIO0PIN >> 16) & 0x01) == 1) {
-		printf("You have selected the high click track speed.\n");
+	else if (((FIO0PIN >> 16) & 0x01) == 1) {
+		if (otherKeyTable[1][2] == 0) {
+			sineWaveDisp();
+			sineWave();
+			memset(otherKeyTable[1],0,sizeof(otherKeyTable[1]));
+			otherKeyTable[1][2] = 1;
+		}
 		wait_us(50000);
-		// TODO input command for high click track speed & LCD display info
-		fastClick();
 	}
-	if (((FIO0PIN >> 23) & 0x01) == 1) {
+	else if (((FIO0PIN >> 23) & 0x01) == 1) {
 		printf("You have pressed B.\n");
 		wait_us(50000);
 	}
+
 	wait_us(50000);
 	rowReset();
 	wait_us(250);
@@ -801,7 +1002,7 @@ void checkRow2(void) {
 }
 
 /*
- * Determine if a key in Row 3 has been pressed and prints test statement
+ * Row 3 of the keypad corresponds to click track speed selection
  */
 void checkRow3(void) {
 
@@ -812,18 +1013,33 @@ void checkRow3(void) {
 	 * Scan each Column input for high value
 	 */
 	if (((FIO0PIN >> 17) & 0x01) == 1) {
-		printf("You have pressed 7.\n");
+			if (otherKeyTable[2][0] ==0) {
+			slowClickDisp();
+			slowClick();
+			memset(otherKeyTable[2],0,sizeof(otherKeyTable[2]));
+			otherKeyTable[2][0] = 1;
+		}
 		wait_us(50000);
 	}
-	if (((FIO0PIN >> 15) & 0x01) == 1) {
-		printf("You have pressed 8.\n");
+	else if (((FIO0PIN >> 15) & 0x01) == 1) {
+		if (otherKeyTable[2][1] ==0) {
+			normalClickDisp();
+			normalClick();
+			memset(otherKeyTable[2],0,sizeof(otherKeyTable[2]));
+			otherKeyTable[2][1] = 1;
+		}
 		wait_us(50000);
 	}
-	if (((FIO0PIN >> 16) & 0x01) == 1) {
-		printf("You have pressed 9.\n");
+	else if (((FIO0PIN >> 16) & 0x01) == 1) {
+		if (otherKeyTable[2][2] ==0) {
+			fastClickDisp();
+			fastClick();
+			memset(otherKeyTable[2],0,sizeof(otherKeyTable[2]));
+			otherKeyTable[2][2] = 1;
+		}
 		wait_us(50000);
 	}
-	if (((FIO0PIN >> 23) & 0x01) == 1) {
+	else if (((FIO0PIN >> 23) & 0x01) == 1) {
 		printf("You have pressed C.\n");
 		wait_us(50000);
 	}
@@ -834,7 +1050,7 @@ void checkRow3(void) {
 }
 
 /*
- * Determine if a key in Row 4 has been pressed and prints test statement
+ * Reset editor application by selecting "*"
  */
 void checkRow4(void) {
 
@@ -845,18 +1061,25 @@ void checkRow4(void) {
 	 * Scan each Column input for high value
 	 */
 	if (((FIO0PIN >> 17) & 0x01) == 1) {
-		printf("You have pressed *.\n");
+		if (otherKeyTable[3][0] ==0) {
+			resetDisp();
+			resetOpt();
+			memset(otherKeyTable[3],0,sizeof(otherKeyTable[3]));
+
+			// We don't want this key press to be remembered!
+			// otherKeyTable[3][0] = 1;
+		}
 		wait_us(50000);
 	}
-	if (((FIO0PIN >> 15) & 0x01) == 1) {
+	else if (((FIO0PIN >> 15) & 0x01) == 1) {
 		printf("You have pressed 0.\n");
 		wait_us(50000);
 	}
-	if (((FIO0PIN >> 16) & 0x01) == 1) {
+	else if (((FIO0PIN >> 16) & 0x01) == 1) {
 		printf("You have pressed #.\n");
 		wait_us(50000);
 	}
-	if (((FIO0PIN >> 23) & 0x01) == 1) {
+	else if (((FIO0PIN >> 23) & 0x01) == 1) {
 		printf("You have pressed D.\n");
 		wait_us(50000);
 	}
@@ -882,30 +1105,91 @@ void keyScan() {
 
 }
 
+int cmpfunc(const void * a, const void * b) {
+	return (*(int*) a - *(int*) b);
+}
+
+/*
+ * Integer comparison: returns negative if b > a and positive if a > b
+ */
+int int_cmp(const void *a, const void *b) {
+	const int *ia = (const int *) a; // casting pointer types
+	const int *ib = (const int *) b;
+	return *ia - *ib;
+}
+
+// qsort struct comparison function
+int struct_cmp_by_order(const void *a, const void *b) {
+	MIDIData *ia = (MIDIData *) a;
+	MIDIData *ib = (MIDIData *) b;
+	return (int) (ia->order - ib->order);
+}
+
 int main(void) {
-	PINSEL1 |= (1 << 21); 	// enable AOUT pin 18
-	PINSEL1 &= ~(1 << 20);	// enable AOUT pin 18
-	// initialize timers
+	PINSEL1 = (1 << 21) | (0 << 20); 	// enable AOUT pins
+
 	timer0Init();
 	timer2Init();
+	timer3Init();
 
-	/*lcdInit();
-	 timer0Init();
-	 //LCDinitCmd();
-	 LCDinitChar();
-	 displayChar(0x46);
-	 displayChar(0x21);*/
+	I2CInit();
 
-	configMIDI(); // configure MIDI keyboard
-	wait_us(100);
+	lcdInit();
+	LCDinitChar();
 
-	keypadInit();	// configure 4x4 keypad
-	wait_us(100);
+	keypadInit();
 
-	unsigned char bytearray[25]; // create an empty char array to hold 25 bytes (one for each note played)
+	configMIDI();
 
+	receivedData[0].order = 4;
+	receivedData[1].order = 3;
+	receivedData[2].order = 9;
+	receivedData[3].order = 1;
+	receivedData[4].order = 20;
+	receivedData[5].order = 10;
+
+	qsort(receivedData, 6, sizeof(MIDIData), struct_cmp_by_order);
+
+	/*for (int i = 0; i < 6; i++)
+	 printf("%d\n", receivedData[i].order);
+	 */
+	//U0LCR &= ~(1<<7);
+	configT2MR3(0);
+
+	int data[8];
+
+	welcomeDisp();
 	while (1) {
 
+		// options1Prompt();
+		// options2Prompt();
+		keyScan();
+		U0LCR &= ~(1 << 7); // must be zero to access RBR
+
+		if (((U0LSR >> 0) & 1) == 1) {
+
+			data[0] = U0RBR;
+			data[1] = U0RBR; // musical tone byte
+			data[2] = U0RBR;
+			data[3] = U0RBR;
+			data[4] = U0RBR;
+			data[5] = U0RBR;
+			data[6] = U0RBR;
+			data[7] = U0RBR;
+
+			for (int i = 0; i < 8; i++) {
+				printf("%x  ", data[i]);
+			}
+			printf("\n......\n");
+
+			//check(data);
+			//printf("%x\n", U0RBR);
+
+			readMIDIByte(data[0], data[1]); // read buffer register bytes into function
+
+			//printf("%d\n", timer0Read_us());
+			//printf("Count is: %d\n", count);
+		}
 	}
 	return 0;
 }
