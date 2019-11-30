@@ -69,9 +69,25 @@ int main(void) {
 	configT2MR3(0);
 
 	int data[8];
+	
+	/*
+	 * Test welcome display
+	 */
+	welcomeDisp();
 
 	while (1) {
 
+		/*
+		 * Test options display
+		 */
+		options1Disp();
+		options2Disp();
+		
+		/*
+		 * Check for keypad presses
+		 */
+		keyScan();
+		
 		U0LCR &= ~(1 << 7); // must be zero to access RBR
 
 		if (((U0LSR >> 0) & 1) == 1) {
