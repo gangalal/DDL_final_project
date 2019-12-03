@@ -13,7 +13,7 @@ void welcomeDisp(void) {
  * "Select from the following options using the keypad:"
  */
 void editor1Prompt(void) {
-	char options1[] = "Select from the following options using the keypad:";
+	char options1[] = "Use keypad to select option:";
 	displayWords2(options1,(sizeof(options1)-1));
 	wait_us(250);
 }
@@ -25,7 +25,7 @@ void editor1Prompt(void) {
  *  *) Reset"
  */
 void editor2Prompt(void) {
-	char options2[] = "1) Record 2) Playback 3) Delete OR *) Reset";
+	char options2[] = "2) Playback 3) Edit *) Reset";
 	displayWords2(options2,(sizeof(options2)-1));
 	wait_us(250);
 }
@@ -33,8 +33,14 @@ void editor2Prompt(void) {
 /*
  * "You have selected the record option."
  */
-void recordDisp(void) {
-	char record[] = "You have selected to record. /n Use keyboard to play song.";
+void record1Disp(void) {
+	char record[] = "You have selected the record option.";
+	displayWords2(record,(sizeof(record)-1));
+	wait_us(250);
+}
+
+void record2Disp(void) {
+	char record[] = "Use the keyboard to record your song.";
 	displayWords2(record,(sizeof(record)-1));
 	wait_us(250);
 }
@@ -43,7 +49,7 @@ void recordDisp(void) {
  * "You have selected the playback option."
  */
 void playbackDisp(void) {
-	char playback[] = "You have selected to playback.";
+	char playback[] = "You have selected to listen to your song.";
 	displayWords2(playback,(sizeof(playback)-1));
 	wait_us(250);
 }
@@ -52,7 +58,7 @@ void playbackDisp(void) {
  * "You have selected the delete option."
  */
 void deleteDisp(void) {
-	char delete[] = "You have selected to delete.";
+	char delete[] = "You have selected to delete current song.";
 	displayWords2(delete,(sizeof(delete)-1));
 	wait_us(250);
 }
@@ -61,7 +67,7 @@ void deleteDisp(void) {
  * "You have selected the reset option. Press * to continue."
  */
 void resetDisp(void) {
-	char reset[] = "You have selected to reset. Press * to continue.";
+	char reset[] = "Reset selected. Press * to continue.";
 	displayWords2(reset,(sizeof(reset)-1));
 	wait_us(250);
 }
@@ -69,7 +75,7 @@ void resetDisp(void) {
  * "Please select from the following waveform options using the keypad:"
  */
 void wave1Prompt(void) {
-	char waveform1[] = "Please select the waveform using the keypad:";
+	char waveform1[] = "Use keypad to select waveform.";
 	displayWords2(waveform1,(sizeof(waveform1)-1));
 	wait_us(250);
 }
@@ -81,7 +87,7 @@ void wave1Prompt(void) {
  *  *) Reset
  */
 void wave2Prompt(void) {
-	char waveform2[] = "4) Square 5) Triangle 6) Sine OR *) Reset";
+	char waveform2[] = "4) Square 5) Triangle 6) Sine *) Reset";
 	displayWords2(waveform2,(sizeof(waveform2)-1));
 	wait_us(250);
 }
@@ -126,7 +132,7 @@ void click1Prompt(void) {
  * "7) Slow 8) Normal 9) Fast OR *) Reset
  */
 void click2Prompt(void) {
-	char click2[] = "7) Slow 8) Normal 9) Fast OR *) Reset";
+	char click2[] = "7) Slow 8) Normal 9) Fast *) Reset";
 	displayWords2(click2,(sizeof(click2)-1));
 	wait_us(250);
 }

@@ -78,7 +78,8 @@ extern void recordSquareWF(int* byte);
 /*
  * Functions for selected options
  */
-extern void beginningRoutine(void);
+extern int data[8];
+extern void preRecordingRoutine(void);
 extern void recordOpt(void);
 extern void playbackOpt(void);
 extern void deleteOpt(void);
@@ -90,7 +91,8 @@ extern void resetOpt(void);
 extern void welcomeDisp(void);
 extern void editor1Prompt(void);
 extern void editor2Prompt(void);
-extern void recordDisp(void);
+extern void record1Disp(void);
+extern void record2Disp(void);
 extern void playbackDisp(void);
 extern void deleteDisp(void);
 extern void resetDisp(void);
