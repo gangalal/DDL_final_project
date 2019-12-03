@@ -1,7 +1,6 @@
 #include "final.h"
 
 int receivedData[25];
-int count;
 
 void configMIDI() {
 	PCONP |= (1 << 3); //on reset UART is enable
@@ -24,48 +23,69 @@ void configMIDI() {
 	U0LCR &= ~(1 << 7); // needs to clear
 }
 
-
-void playSquareWF(int* byte) {
+void recordSquareWF(int* byte) {
 		if (byte[0] == 0x3c) {
+			configT2MR3(259);		// play middle c (C4)
 			receivedData[count] = 0x3c;
 			count++;
-			configT2MR3(259);		// play middle c (C4)
-		}
-		else if (byte[0] == 0x3e) {
-			receivedData[count] = 0x3e;
-			count++;
+			printf("count %d\n", count);
+		} else if (byte[0] == 0x3e) {
 			configT2MR3(291);		// play D4
-		}
-		else if (byte[0] == 0x40) {
 			receivedData[count] = 0x3e;
 			count++;
+			printf("count %d\n", count);
+		} else if (byte[0] == 0x40) {
 			configT2MR3(327);		// play E4
-		}
-		else if (byte[0] == 0x41) {
+			receivedData[count] = 0x40;
+			count++;
+			printf("count %d\n", count);
+		} else if (byte[0] == 0x41) {
+			configT2MR3(347);		// play F4
 			receivedData[count] = 0x41;
 			count++;
-			configT2MR3(347);		// play F4
-		}
-		else if (byte[0] == 0x43) {
+			printf("count %d\n", count);
+		} else if (byte[0] == 0x43) {
+			configT2MR3(389);		// play G4
 			receivedData[count] = 0x43;
 			count++;
-			configT2MR3(389);		// play G4
-		}
-		else if (byte[0] == 0x45) {
+			printf("count %d\n", count);
+		} else if (byte[0] == 0x45) {
+			configT2MR3(437);		// play A4
 			receivedData[count] = 0x45;
 			count++;
-			configT2MR3(437);		// play A4
-		}
-		else if (byte[0] == 0x47) {
+			printf("count %d\n", count);
+		} else if (byte[0] == 0x47) {
+			configT2MR3(490);		// play B4
 			receivedData[count] = 0x47;
 			count++;
-			configT2MR3(490);		// play B4
-		}
-		else if (byte[0] == 0x48) {
+			printf("count %d\n", count);
+		} else if (byte[0] == 0x48) {
+			configT2MR3(519);		// play C5 (full octave)
 			receivedData[count] = 0x48;
 			count++;
-			configT2MR3(519);		// play C5 (full octave)
+			printf("count %d\n", count);
 		}
+
+}
+
+void playSquareWF(int* byte) {
+	if (byte[0] == 0x3c) {
+		configT2MR3(259);		// play middle c (C4)
+	} else if (byte[0] == 0x3e) {
+		configT2MR3(291);		// play D4
+	} else if (byte[0] == 0x40) {
+		configT2MR3(327);		// play E4
+	} else if (byte[0] == 0x41) {
+		configT2MR3(347);		// play F4
+	} else if (byte[0] == 0x43) {
+		configT2MR3(389);		// play G4
+	} else if (byte[0] == 0x45) {
+		configT2MR3(437);		// play A4
+	} else if (byte[0] == 0x47) {
+		configT2MR3(490);		// play B4
+	} else if (byte[0] == 0x48) {
+		configT2MR3(519);		// play C5 (full octave)
+	}
 
 }
 
@@ -90,55 +110,32 @@ void playTriangleWF(int* byte) {
 
 }
 /*
-void playSineWF(int* byte) {
-	if (byte[0] == 0x3c) {
-		sineWave(259);		// play middle c (C4)
-		U0FCR |= (1 << 1); // clear FIFO Rx
-	} else if (byte[0] == 0x3e) {
-		sineWave(291);		// play D4
-		U0FCR |= (1 << 1); // clear FIFO Rx
-	} else if (byte[0] == 0x40) {
-		sineWave(327);		// play E4
-		U0FCR |= (1 << 1); // clear FIFO Rx
-	} else if (byte[0] == 0x41) {
-		sineWave(347);		// play F4
-		U0FCR |= (1 << 1); // clear FIFO Rx
-	} else if (byte[0] == 0x43) {
-		sineWave(389);		// play G4
-		U0FCR |= (1 << 1); // clear FIFO Rx
-	} else if (byte[0] == 0x45) {
-		sineWave(437);		// play A4
-		U0FCR |= (1 << 1); // clear FIFO Rx
-	} else if (byte[0] == 0x47) {
-		sineWave(490);		// play B4
-		U0FCR |= (1 << 1); // clear FIFO Rx
-	} else if (byte[0] == 0x48) {
-		sineWave(519);		// play C5 (full octave)
-		U0FCR |= (1 << 1); // clear FIFO Rx
-	}
+ void playSineWF(int* byte) {
+ if (byte[0] == 0x3c) {
+ sineWave(259);		// play middle c (C4)
+ U0FCR |= (1 << 1); // clear FIFO Rx
+ } else if (byte[0] == 0x3e) {
+ sineWave(291);		// play D4
+ U0FCR |= (1 << 1); // clear FIFO Rx
+ } else if (byte[0] == 0x40) {
+ sineWave(327);		// play E4
+ U0FCR |= (1 << 1); // clear FIFO Rx
+ } else if (byte[0] == 0x41) {
+ sineWave(347);		// play F4
+ U0FCR |= (1 << 1); // clear FIFO Rx
+ } else if (byte[0] == 0x43) {
+ sineWave(389);		// play G4
+ U0FCR |= (1 << 1); // clear FIFO Rx
+ } else if (byte[0] == 0x45) {
+ sineWave(437);		// play A4
+ U0FCR |= (1 << 1); // clear FIFO Rx
+ } else if (byte[0] == 0x47) {
+ sineWave(490);		// play B4
+ U0FCR |= (1 << 1); // clear FIFO Rx
+ } else if (byte[0] == 0x48) {
+ sineWave(519);		// play C5 (full octave)
+ U0FCR |= (1 << 1); // clear FIFO Rx
+ }
+ }
+ */
 
-}
-*/
-
-
-
-
-void check(int* byte) {
-
-	//printf("byte is %x\n", byte);
-	/*int* data;
-	 data[0]
-	 */
-	if ((byte[0] == 0x90) && (byte[1] == 0x3c) && (byte[2] > 0)) {
-
-		configT2MR3(259);		// play middle c (C4)
-		printf("you pressed for long time\n");
-	}
-	/*if ((byte[0] == 0x90) && (byte[1] == 0x3c) && (byte[2] > 0)
-			&& (byte[3]> 0)) {
-		printf("you pressed for little time\n");
-		configT2MR3(259);		// play middle c (C4)
-	}*/ else {
-		configT2MR3(0);
-	}
-}

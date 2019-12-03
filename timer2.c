@@ -43,6 +43,6 @@ void configT2MR3(int freq) {
 	timer0Reset();			// Reset Timer 0
 	T2MR3 = (1000000 / (2 * freq));	// load T2MR3 with match value based on frequency PCLK/(2*freq)
 	timer2Reset();
-	while (timer0Read_us() < 2000000.0) {
+	while (timer0Read_us() < 100000.0) {
 	}
 }

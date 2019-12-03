@@ -73,7 +73,7 @@ extern void configMIDI(void);
 extern void playSquareWF(int* byte);
 extern void playTriangleWF(int* byte);
 extern void playSineWF(int* byte);
-extern void check(int* byte);
+extern void recordSquareWF(int* byte);
 
 /*
  * Functions for selected options
