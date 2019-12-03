@@ -27,45 +27,44 @@ void configMIDI() {
 
 void playSquareWF(int* byte) {
 		if (byte[0] == 0x3c) {
-			configT2MR3(259);		// play middle c (C4)
 			receivedData[count] = 0x3c;
 			count++;
-	//		U0FCR |= (1 << 1); // clear FIFO Rx
-		} else if (byte[0] == 0x3e) {
-			configT2MR3(291);		// play D4
+			configT2MR3(259);		// play middle c (C4)
+		}
+		else if (byte[0] == 0x3e) {
 			receivedData[count] = 0x3e;
 			count++;
-	//		U0FCR |= (1 << 1); // clear FIFO Rx
-		} else if (byte[0] == 0x40) {
-			configT2MR3(327);		// play E4
-			receivedData[count] = 0x40;
+			configT2MR3(291);		// play D4
+		}
+		else if (byte[0] == 0x40) {
+			receivedData[count] = 0x3e;
 			count++;
-	//		U0FCR |= (1 << 1); // clear FIFO Rx
-		} else if (byte[0] == 0x41) {
-			configT2MR3(347);		// play F4
+			configT2MR3(327);		// play E4
+		}
+		else if (byte[0] == 0x41) {
 			receivedData[count] = 0x41;
 			count++;
-	//		U0FCR |= (1 << 1); // clear FIFO Rx
-		} else if (byte[0] == 0x43) {
-			configT2MR3(389);		// play G4
+			configT2MR3(347);		// play F4
+		}
+		else if (byte[0] == 0x43) {
 			receivedData[count] = 0x43;
 			count++;
-	//		U0FCR |= (1 << 1); // clear FIFO Rx
-		} else if (byte[0] == 0x45) {
-			configT2MR3(437);		// play A4
+			configT2MR3(389);		// play G4
+		}
+		else if (byte[0] == 0x45) {
 			receivedData[count] = 0x45;
 			count++;
-	//		U0FCR |= (1 << 1); // clear FIFO Rx
-		} else if (byte[0] == 0x47) {
-			configT2MR3(490);		// play B4
+			configT2MR3(437);		// play A4
+		}
+		else if (byte[0] == 0x47) {
 			receivedData[count] = 0x47;
 			count++;
-	//		U0FCR |= (1 << 1); // clear FIFO Rx
-		} else if (byte[0] == 0x48) {
-			configT2MR3(519);		// play C5 (full octave)
+			configT2MR3(490);		// play B4
+		}
+		else if (byte[0] == 0x48) {
 			receivedData[count] = 0x48;
 			count++;
-	//		U0FCR |= (1 << 1); // clear FIFO Rx
+			configT2MR3(519);		// play C5 (full octave)
 		}
 
 }
@@ -73,28 +72,20 @@ void playSquareWF(int* byte) {
 void playTriangleWF(int* byte) {
 	if (byte[0] == 0x3c) {
 		triangleWave(700, 35);		// play middle c (C4)
-//		U0FCR |= (1 << 1); // clear FIFO Rx
 	} else if (byte[0] == 0x3e) {
 		triangleWave(700, 40);		// play D4
-//		U0FCR |= (1 << 1); // clear FIFO Rx
 	} else if (byte[0] == 0x40) {
 		triangleWave(700, 45);		// play E4
-//		U0FCR |= (1 << 1); // clear FIFO Rx
 	} else if (byte[0] == 0x41) {
 		triangleWave(700, 47);		// play F4
-//		U0FCR |= (1 << 1); // clear FIFO Rx
 	} else if (byte[0] == 0x43) {
-		triangleWave(700, 55);	// play G4
-//		U0FCR |= (1 << 1); // clear FIFO Rx
+		triangleWave(700, 55);		// play G4
 	} else if (byte[0] == 0x45) {
 		triangleWave(700, 60);		// play A4
-//		U0FCR |= (1 << 1); // clear FIFO Rx
 //	} else if (byte[0] == 0x47) {
 //		triangleWave();		// play B4
-//		U0FCR |= (1 << 1); // clear FIFO Rx
 	} else if (byte[0] == 0x48) {
 		triangleWave(700, 75);		// play C5 (full octave)
-//		U0FCR |= (1 << 1); // clear FIFO Rx
 	}
 
 }
