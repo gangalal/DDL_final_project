@@ -81,9 +81,10 @@ int main(void) {
 		recordOpt();
 
 		/*
-		 * User can select playback or edit
+		 * User can select playback, edit, or reset
 		 */
 		checkRow1();
+		checkRow4();
 	}
 
 	return 0;
