@@ -24,21 +24,22 @@ extern void recordOpt(void) {
 			data[6] = U0RBR;
 			data[7] = U0RBR;
 
-			recordSquareWF(data);
+			if (keypad[1][0] == 1) {
+				recordSquareWF(data);
+			}
+			else if (keypad[1][1] == 1) {
+				recordTriangleWF(data);
+			}
 
 		}
 		timer1Stop();
 		noteLength[count] = 20000 * timer1Read_us();
-//		else if (keypad[0][1] == 1) {
-//			recordTriangleWF(data);
-//		}
 //		else if (keypad[0][2] == 1) {
 //			playSineWF(data);
 //		}
 	}
 	configT2MR3(0);
 	timer3Stop();
-	memset(keypad, 0, sizeof(keypad));
 }
 
 /*
@@ -47,42 +48,80 @@ extern void recordOpt(void) {
 extern void playbackOpt(void) {
 	// TODO playback function will probably come from EEPROM
 	playback2Disp();
-	for (int i = 0; i < 25; i++) {
-		if (receivedData[i] == 0x3c) {
-			configT2MR3(259);		// play middle c (C4)
-			wait1_us(noteLength[i]);
-			configT2MR3(0);
-		} else if (receivedData[i] == 0x3e) {
-			configT2MR3(291);		// play D4
-			wait1_us(noteLength[i]);
-			configT2MR3(0);
-		} else if (receivedData[i] == 0x40) {
-			configT2MR3(327);		// play E4
-			wait1_us(noteLength[i]);
-			configT2MR3(0);
-		} else if (receivedData[i] == 0x41) {
-			configT2MR3(347);		// play F4
-			wait1_us(noteLength[i]);
-			configT2MR3(0);
-		} else if (receivedData[i] == 0x43) {
-			configT2MR3(389);		// play G4
-			wait1_us(noteLength[i]);
-			configT2MR3(0);
-		} else if (receivedData[i] == 0x45) {
-			configT2MR3(437);		// play A4
-			wait1_us(noteLength[i]);
-			configT2MR3(0);
-		} else if (receivedData[i] == 0x47) {
-			configT2MR3(490);		// play B4
-			wait1_us(noteLength[i]);
-			configT2MR3(0);
-		} else if (receivedData[i] == 0x48) {
-			configT2MR3(519);		// play C5 (full octave)
-			wait1_us(noteLength[i]);
-			configT2MR3(0);
+	if (keypad[1][0] == 1) {
+		for (int i = 0; i < 25; i++) {
+			if (receivedData[i] == 0x3c) {
+				configT2MR3(259);		// play middle c (C4)
+				wait1_us(noteLength[i]);
+				configT2MR3(0);
+			} else if (receivedData[i] == 0x3e) {
+				configT2MR3(291);		// play D4
+				wait1_us(noteLength[i]);
+				configT2MR3(0);
+			} else if (receivedData[i] == 0x40) {
+				configT2MR3(327);		// play E4
+				wait1_us(noteLength[i]);
+				configT2MR3(0);
+			} else if (receivedData[i] == 0x41) {
+				configT2MR3(347);		// play F4
+				wait1_us(noteLength[i]);
+				configT2MR3(0);
+			} else if (receivedData[i] == 0x43) {
+				configT2MR3(389);		// play G4
+				wait1_us(noteLength[i]);
+				configT2MR3(0);
+			} else if (receivedData[i] == 0x45) {
+				configT2MR3(437);		// play A4
+				wait1_us(noteLength[i]);
+				configT2MR3(0);
+			} else if (receivedData[i] == 0x47) {
+				configT2MR3(490);		// play B4
+				wait1_us(noteLength[i]);
+				configT2MR3(0);
+			} else if (receivedData[i] == 0x48) {
+				configT2MR3(519);		// play C5 (full octave)
+				wait1_us(noteLength[i]);
+				configT2MR3(0);
+			}
+		}
+		configT2MR3(0);
+	}
+	if (keypad[1][1] == 1) {
+		for (int i = 0; i < 25; i++) {
+			if (receivedData[i] == 0x3c) {
+				triangleWave(700, 35);		// play middle c (C4)
+				wait1_us(noteLength[i]);
+				triangleWave(0, 0);
+			} else if (receivedData[i] == 0x3e) {
+				triangleWave(700, 40);		// play D4
+				wait1_us(noteLength[i]);
+				triangleWave(0, 0);
+			} else if (receivedData[i] == 0x40) {
+				triangleWave(700, 45);		// play E4
+				wait1_us(noteLength[i]);
+				triangleWave(0, 0);
+			} else if (receivedData[i] == 0x41) {
+				triangleWave(700, 47);		// play F4
+				wait1_us(noteLength[i]);
+				triangleWave(0, 0);
+			} else if (receivedData[i] == 0x43) {
+				triangleWave(700, 55);		// play G4
+				wait1_us(noteLength[i]);
+				triangleWave(0, 0);
+			} else if (receivedData[i] == 0x45) {
+				triangleWave(700, 60);		// play A4
+				wait1_us(noteLength[i]);
+				triangleWave(0, 0);
+//		} else if (receivedData[i] == 0x47) {
+//			configT2MR3(490);		// play B4
+//			wait1_us(noteLength[i]);
+			} else if (receivedData[i] == 0x48) {
+				triangleWave(700, 75);		// play C5 (full octave)
+				wait1_us(noteLength[i]);
+				triangleWave(0, 0);
+			}
 		}
 	}
-	configT2MR3(0);
 	memset(keypad, 0, sizeof(keypad));
 }
 
@@ -91,7 +130,8 @@ extern void playbackOpt(void) {
  */
 extern void deleteOpt(void) {
 // TODO delete function will probably come from EEPROM
-
+	memset(receivedData, 0, sizeof(receivedData));
+	memset(noteLength, 0, sizeof(noteLength));
 }
 
 /*

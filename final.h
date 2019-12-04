@@ -68,6 +68,7 @@ extern void playSquareWF(int* byte);
 extern void playTriangleWF(int* byte);
 extern void playSineWF(int* byte);
 extern void recordSquareWF(int* byte);
+extern void recordTriangleWF(int* byte);
 
 /*
  * Functions for selected options
