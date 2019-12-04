@@ -27,7 +27,7 @@ void memRead(int* data) {
 	I2CStart();
 	I2CWrite((addr << 1) + 1); // last bit shifted to 1 for read
 	for (int i = 0; i<25;i++) {
-		if (i<24) {
+		if (i<25) {
 			int tester = I2CRead(1);
 			if (tester == data[i]){
 				count++;
@@ -42,7 +42,10 @@ void memRead(int* data) {
 		}
 	I2CStop();
 	wait_us(100);
-	if (count == 25) { // if the counter sees the correct 25 notes
+	//if (count == 3) { // if the counter sees the correct 25 notes
 		// insert printf command or LCD screen shot
-	}
+		for (int i = 0; i < 25; i ++)
+			printf("stored data %d\n", data[i]);
+	//}
+
 }
