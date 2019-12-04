@@ -69,6 +69,7 @@ extern void displayWords2(char* array, int arraySize);
 //typedef struct _MIDIData MIDIData; //defining struct type
 extern int count;
 extern int receivedData[25];
+extern int noteLength[25];
 extern void configMIDI(void);
 extern void playSquareWF(int* byte);
 extern void playTriangleWF(int* byte);
@@ -119,6 +120,13 @@ extern int timer0Read_us();
 extern void wait_us(int usec);
 extern void wait_ticks(unsigned long count);
 extern void waitOneSecond(unsigned long count);
+
+extern void timer1Init();
+extern void timer1Start();
+extern void timer1Stop();
+extern void timer1Reset();
+extern int timer1Read_us();
+extern void wait1_us(int usec);
 
 extern void timer2Init();
 extern void configT2MR3(int freq);
