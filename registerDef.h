@@ -31,6 +31,9 @@
 #define T0TCR (*(volatile unsigned int *)(0x40004004))      // Timer 0
 #define T0TC (*(volatile unsigned int *)(0x40004008))       // Timer Counter
 
+#define T1TCR (*(volatile unsigned int *)(0x40008004))		// Timer 1
+#define T1TC (*(volatile unsigned int *)(0x40008008))		  // Timer Counter
+
 #define T2TCR (*(volatile unsigned int *)(0x40090004))      // Timer 2 Timer Control Register
 #define T2TC (*(volatile unsigned int *)(0x40090008))       // Timer 2 Timer Counter
 #define T2EMR (*(volatile unsigned int *)(0x4009003C))      // EMR Match Register for Timer 2
