@@ -30,8 +30,9 @@ extern void recordOpt(void) {
 //		else if (keypad[0][2] == 1) {
 //			playSineWF(data);
 //		}
-
 	}
+	configT2mr3(0);
+	timer3Stop()
 }
 /*
  *
@@ -59,8 +60,24 @@ extern void preRecordingRoutine(void) {
 extern void playbackOpt(void) {
 	// TODO playback function will probably come from EEPROM
 	playbackDisp();
-	for (int i = 0; i < sizeof(receivedData); i++) {
-		configT2MR3(receivedData[i]);
+	for (int i = 0; i < 25; i++) {
+		if (receivedData[i] == 0x3c) {
+				configT2MR3(259);		// play middle c (C4)
+		} else if (receivedData[i] == 0x3e) {
+				configT2MR3(291);		// play D4
+		} else if (receivedData[i] == 0x40) {
+				configT2MR3(327);		// play E4
+		} else if (receivedData[i] == 0x41) {
+				configT2MR3(347);		// play F4
+		} else if (receivedData[i] == 0x43) {
+				configT2MR3(389);		// play G4
+		} else if (receivedData[i] == 0x45) {
+				configT2MR3(437);		// play A4
+		} else if (receivedData[i] == 0x47) {
+				configT2MR3(490);		// play B4
+		} else if (receivedData[i] == 0x48) {
+				configT2MR3(519);		// play C5 (full octave)
+		}
 	}
 }
 
