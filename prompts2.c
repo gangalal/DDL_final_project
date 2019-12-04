@@ -1,7 +1,7 @@
 #include "final.h"
 
 /*
- * "Welcome to our game!"
+ * "Welcome to the music editor!"
  */
 void welcomeDisp(void) {
 	char welcome[] = "Welcome to our game!";
@@ -34,7 +34,7 @@ void editor2Prompt(void) {
  * "You have selected the record option."
  */
 void record1Disp(void) {
-	char record[] = "You have selected the record option.";
+	char record[] = "You have entered recording mode.";
 	displayWords2(record,(sizeof(record)-1));
 	wait_us(250);
 }
@@ -46,16 +46,25 @@ void record2Disp(void) {
 }
 
 /*
- * "You have selected the playback option."
+ * "You chose to listen to your song."
  */
-void playbackDisp(void) {
-	char playback[] = "You have selected to listen to your song.";
+void playback1Disp(void) {
+	char playback[] = "You chose to listen to your song.";
 	displayWords2(playback,(sizeof(playback)-1));
 	wait_us(250);
 }
 
 /*
- * "You have selected the delete option."
+ * "Playing current track."
+ */
+void playback2Disp(void) {
+	char playback[] = "You chose to listen to your song.";
+	displayWords2(playback,(sizeof(playback)-1));
+	wait_us(250);
+}
+
+/*
+ * "You have selected to delete current song."
  */
 void deleteDisp(void) {
 	char delete[] = "You have selected to delete current song.";
@@ -64,15 +73,15 @@ void deleteDisp(void) {
 }
 
 /*
- * "You have selected the reset option. Press * to continue."
+ * "You chose to reset. Press * to continue."
  */
 void resetDisp(void) {
-	char reset[] = "Reset selected. Press * to continue.";
+	char reset[] = "You chose to reset. Press * to continue.";
 	displayWords2(reset,(sizeof(reset)-1));
 	wait_us(250);
 }
 /*
- * "Please select from the following waveform options using the keypad:"
+ * "Use keypad to select waveform."
  */
 void wave1Prompt(void) {
 	char waveform1[] = "Use keypad to select waveform.";
@@ -81,10 +90,7 @@ void wave1Prompt(void) {
 }
 
 /*
- * "4) Square
- *  5) Triangle
- *  6) Sine
- *  *) Reset
+ * "4) Square 5) Triangle 6) Sine *) Reset"
  */
 void wave2Prompt(void) {
 	char waveform2[] = "4) Square 5) Triangle 6) Sine *) Reset";
@@ -93,7 +99,7 @@ void wave2Prompt(void) {
 }
 
 /*
- * "You have selected the square waveform."
+ * "You have selected square waveform."
  */
 void squareWaveDisp(void) {
 	char square[] = "You have selected square waveform.";
@@ -102,7 +108,7 @@ void squareWaveDisp(void) {
 }
 
 /*
- * "You have selected the triangle waveform."
+ * "You have selected triangle waveform."
  */
 void triangleWaveDisp(void) {
 	char triangle[] = "You have selected triangle waveform.";
@@ -111,7 +117,7 @@ void triangleWaveDisp(void) {
 }
 
 /*
- * "You have selected the sine waveform."
+ * "You have selected sine waveform."
  */
 void sineWaveDisp(void) {
 	char sine[] = "You have selected sine waveform.";
@@ -120,24 +126,24 @@ void sineWaveDisp(void) {
 }
 
 /*
- * "Please select from the following waveform options using the keypad:"
+ * "Use keypad to select click speed."
  */
 void click1Prompt(void) {
-	char click1[] = "Please select the click speed using the keypad:";
+	char click1[] = "Use keypad to select click speed.";
 	displayWords2(click1,(sizeof(click1)-1));
 	wait_us(250);
 }
 
 /*
- * "7) Slow 8) Normal 9) Fast OR *) Reset
+ * "7) Slow 8) Normal 9) Fast OR C) None"
  */
 void click2Prompt(void) {
-	char click2[] = "7) Slow 8) Normal 9) Fast *) Reset";
+	char click2[] = "7) Slow 8) Normal 9) Fast C) None";
 	displayWords2(click2,(sizeof(click2)-1));
 	wait_us(250);
 }
 /*
- * "You have selected the slow click track speed."
+ * "You have selected slow click."
  */
 void slowClickDisp(void) {
 	char slowClick[] = "You have selected slow click.";
@@ -146,7 +152,7 @@ void slowClickDisp(void) {
 }
 
 /*
- * "You have selected the normal click track speed."
+ * "You have selected normal click."
  */
 void normalClickDisp(void) {
 	char normalClick[] = "You have selected normal click.";
@@ -155,7 +161,7 @@ void normalClickDisp(void) {
 }
 
 /*
- * "You have selected the fast click track speed."
+ * "You have selected fast click."
  */
 void fastClickDisp(void) {
 	char fastClick[] = "You have selected fast click.";
@@ -164,7 +170,7 @@ void fastClickDisp(void) {
 }
 
 /*
- * "You have selected the fast click track speed."
+ * "You have selected no click."
  */
 void noClickDisp(void) {
 	char noClick[] = "You have selected no click.";

@@ -1,7 +1,7 @@
 #include "final.h"
 
 int receivedData[25];
-
+int noteLength[25];
 void configMIDI() {
 	PCONP |= (1 << 3); //on reset UART is enable
 	PCLKSEL0 &= ~(1 << 6);
@@ -24,6 +24,8 @@ void configMIDI() {
 }
 
 void recordSquareWF(int* byte) {
+	timer1Reset();
+	timer1Start();
 		if (byte[0] == 0x3c) {
 			configT2MR3(259);		// play middle c (C4)
 			receivedData[count] = 0x3c;
@@ -65,6 +67,8 @@ void recordSquareWF(int* byte) {
 			count++;
 			printf("count %d\n", count);
 		}
+		timer1Stop();
+		noteLength[count] = timer1Read_us();
 
 }
 

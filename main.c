@@ -17,12 +17,6 @@
 #include "registerDef.h"
 #include "final.h"
 
-void playEditedData() {
-	for (int i = 0; i < sizeof(receivedData); i++) {
-		configT2MR3(receivedData[i]);
-	}
-}
-
 int main(void) {
 	PINSEL1 = (1 << 21) | (0 << 20); 	// enable AOUT pins
 
@@ -76,15 +70,14 @@ int main(void) {
 		}
 
 		/*
-		 * record song
+		 * record song; reset keypad selections
 		 */
 		recordOpt();
 
 		/*
 		 * User can select playback, edit, or reset
 		 */
-		checkRow1();
-		checkRow4();
+		postRecordingRoutine();
 	}
 
 	return 0;

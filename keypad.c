@@ -129,10 +129,6 @@ void checkRow1(void) {
 	setRow1();
 	wait_us(250);
 
-	editor1Prompt();
-	wait_us(5000000);
-	editor2Prompt();
-
 //	if (((FIO0PIN >> 17) & 0x01) == 1) {
 //		if (keypad[0][0] == 0) {
 //			preRecordingRoutine();
@@ -143,8 +139,8 @@ void checkRow1(void) {
 //		wait_us(50000);
 //	}
 	if (((FIO0PIN >> 15) & 0x01) == 1) {
-		if (keypad[0][1]) {
-			playbackDisp();
+		if (keypad[0][1] == 0) {
+			playback1Disp();
 			playbackOpt();	// TODO make playbackOpt() EEPROM
 			memset(keypad[0],0,sizeof(keypad[0]));
 			keypad[0][1] = 1;
@@ -152,7 +148,7 @@ void checkRow1(void) {
 		wait_us(50000);
 	}
 	else if (((FIO0PIN >> 16) & 0x01) == 1) {
-		if(keypad[0][2]) {
+		if(keypad[0][2] == 0) {
 			deleteDisp();
 			deleteOpt();	// TODO make deleteOpt() EEPROM
 			memset(keypad[0],0,sizeof(keypad[0]));

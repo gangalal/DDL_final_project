@@ -7,8 +7,8 @@
 #include <math.h>
 
 #define PCONP (*(volatile unsigned int *)(0x400FC0C4))
-#define PCLKSEL0 (*(volatile unsigned int *)(0x400FC1A8))   // Timer 0 Clock select
-#define PCLKSEL1 (*(volatile unsigned int *)(0x400FC1AC))   // Timer 2 Clock select
+#define PCLKSEL0 (*(volatile unsigned int *)(0x400FC1A8))   // Timer 0, 1 Clock select
+#define PCLKSEL1 (*(volatile unsigned int *)(0x400FC1AC))   // Timer 2, 3 Clock select
 
 #define PINSEL0 (*(volatile unsigned int *)(0x4002C000))
 #define PINSEL1 (*(volatile unsigned int *)(0x4002C004))
@@ -32,7 +32,7 @@
 #define T0TC (*(volatile unsigned int *)(0x40004008))       // Timer Counter
 
 #define T1TCR (*(volatile unsigned int *)(0x40008004))		// Timer 1
-#define T1TC (*(volatile unsigned int *)(0x40008008))		  // Timer Counter
+#define T1TC (*(volatile unsigned int *)(0x40008008))		// Timer Counter
 
 #define T2TCR (*(volatile unsigned int *)(0x40090004))      // Timer 2 Timer Control Register
 #define T2TC (*(volatile unsigned int *)(0x40090008))       // Timer 2 Timer Counter

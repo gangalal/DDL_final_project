@@ -19,6 +19,16 @@ static inline void timer2Reset() {
 	T2TCR &= ~(1 << 1);	//
 }
 
+
+/*
+ * Stop Timer 0
+ */
+void timer2Stop() {
+
+	T2TCR &= ~(1 << 0);
+
+}
+
 /**
  * Initialize Timer 2 to control the timing of decay for each tone
  */

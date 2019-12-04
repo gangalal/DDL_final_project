@@ -11,6 +11,8 @@ extern void recordOpt(void) {
 	record2Disp();
 	U0LCR &= ~(1 << 7); // must be zero to access RBR
 	while (count < 25) {
+		timer1Reset();
+		timer1Start();
 		if (((U0LSR >> 0) & 1) == 1) {
 
 			data[0] = U0RBR;
@@ -21,9 +23,12 @@ extern void recordOpt(void) {
 			data[5] = U0RBR;
 			data[6] = U0RBR;
 			data[7] = U0RBR;
+
 			recordSquareWF(data);
 
 		}
+		timer1Stop();
+		noteLength[count] = 20000 * timer1Read_us();
 //		else if (keypad[0][1] == 1) {
 //			recordTriangleWF(data);
 //		}
@@ -31,60 +36,110 @@ extern void recordOpt(void) {
 //			playSineWF(data);
 //		}
 	}
-	configT2mr3(0);
-	timer3Stop()
+	configT2MR3(0);
+	timer3Stop();
+	memset(keypad, 0, sizeof(keypad));
 }
+
 /*
- *
+ * Play back recorded song
+ */
+extern void playbackOpt(void) {
+	// TODO playback function will probably come from EEPROM
+	playback2Disp();
+	for (int i = 0; i < 25; i++) {
+		if (receivedData[i] == 0x3c) {
+			configT2MR3(259);		// play middle c (C4)
+			wait1_us(noteLength[i]);
+			configT2MR3(0);
+		} else if (receivedData[i] == 0x3e) {
+			configT2MR3(291);		// play D4
+			wait1_us(noteLength[i]);
+			configT2MR3(0);
+		} else if (receivedData[i] == 0x40) {
+			configT2MR3(327);		// play E4
+			wait1_us(noteLength[i]);
+			configT2MR3(0);
+		} else if (receivedData[i] == 0x41) {
+			configT2MR3(347);		// play F4
+			wait1_us(noteLength[i]);
+			configT2MR3(0);
+		} else if (receivedData[i] == 0x43) {
+			configT2MR3(389);		// play G4
+			wait1_us(noteLength[i]);
+			configT2MR3(0);
+		} else if (receivedData[i] == 0x45) {
+			configT2MR3(437);		// play A4
+			wait1_us(noteLength[i]);
+			configT2MR3(0);
+		} else if (receivedData[i] == 0x47) {
+			configT2MR3(490);		// play B4
+			wait1_us(noteLength[i]);
+			configT2MR3(0);
+		} else if (receivedData[i] == 0x48) {
+			configT2MR3(519);		// play C5 (full octave)
+			wait1_us(noteLength[i]);
+			configT2MR3(0);
+		}
+	}
+	configT2MR3(0);
+	memset(keypad, 0, sizeof(keypad));
+}
+
+/*
+ * Delete recorded song
+ */
+extern void deleteOpt(void) {
+// TODO delete function will probably come from EEPROM
+
+}
+
+/*
+ * Reset editor
+ */
+extern void resetOpt(void) {
+// TODO reset function
+}
+
+/*
+ * This is the initial routine the user sees before the edit takes place
  */
 extern void preRecordingRoutine(void) {
-	wave1Prompt();
+	keypad[0][0] = 1;
+	record1Disp();
 	wait_us(5000000);
+
+	wave1Prompt();
+	wait_us(2000000);
 	wave2Prompt();
 	while (keypad[1][0] == 0 && keypad[1][1] == 0 && keypad[1][2] == 0) {
 		checkRow2();
 	}
+
+	wait_us(2000000);
+
 	click1Prompt();
-	wait_us(5000000);
+	wait_us(2000000);
 	click2Prompt();
 	while (keypad[2][0] == 0 && keypad[2][1] == 0 && keypad[2][2] == 0
 			&& keypad[2][3] == 0) {
 		checkRow3();
-		if (keypad[2][0] == 1 || keypad[2][1] == 1 || keypad[2][2] == 1
-				|| keypad[2][3] == 1) {
-			break;
+	}
+
+	wait_us(2000000);
+}
+
+/*
+ * This is the routine the user sees just after the recording has occurred
+ */
+extern void postRecordingRoutine(void) {
+	editor1Prompt();
+	wait_us(2000000);
+	editor2Prompt();
+	while (keypad[0][1] == 0 && keypad[0][2] == 0) {
+		checkRow1();
+		if (keypad[0][1] == 0 && keypad[0][2] == 0) {
+			checkRow4();
 		}
 	}
-}
-
-extern void playbackOpt(void) {
-	// TODO playback function will probably come from EEPROM
-	playbackDisp();
-	for (int i = 0; i < 25; i++) {
-		if (receivedData[i] == 0x3c) {
-				configT2MR3(259);		// play middle c (C4)
-		} else if (receivedData[i] == 0x3e) {
-				configT2MR3(291);		// play D4
-		} else if (receivedData[i] == 0x40) {
-				configT2MR3(327);		// play E4
-		} else if (receivedData[i] == 0x41) {
-				configT2MR3(347);		// play F4
-		} else if (receivedData[i] == 0x43) {
-				configT2MR3(389);		// play G4
-		} else if (receivedData[i] == 0x45) {
-				configT2MR3(437);		// play A4
-		} else if (receivedData[i] == 0x47) {
-				configT2MR3(490);		// play B4
-		} else if (receivedData[i] == 0x48) {
-				configT2MR3(519);		// play C5 (full octave)
-		}
-	}
-}
-
-extern void deleteOpt(void) {
-// TODO delete function will probably come from EEPROM
-}
-
-extern void resetOpt(void) {
-// TODO reset function
 }
