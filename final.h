@@ -1,3 +1,10 @@
+/*
+ * final.h
+ *
+ *  Created on: Nov 30, 2019
+ *      Author: Jess_
+ */
+
 #ifndef FINAL_H_
 #define FINAL_H_
 
@@ -52,8 +59,7 @@ extern void LCDinitCmd(void);
 extern void LCDchar(int data);
 extern void LCDinitChar(void);
 extern void displayChar(int data);
-extern void displayWords(int* array, int arraySize);
-extern void displayWords2(char* array, int arraySize);
+extern void displayWords(char* array, int arraySize);
 
 /*
  * MIDI struct and functions
@@ -68,17 +74,16 @@ extern void playSquareWF(int* byte);
 extern void playTriangleWF(int* byte);
 extern void playSineWF(int* byte);
 extern void recordSquareWF(int* byte);
-extern void recordTriangleWF(int* byte);
 
 /*
  * Functions for selected options
  */
 extern int data[8];
-extern void recordOpt(void);
 extern void preRecordingRoutine(void);
-extern void postRecordingRoutine(void);
+extern void recordOpt(void);
+extern void saveOpt(void);
 extern void playbackOpt(void);
-extern void deleteOpt(void);
+extern void editOpt(void);
 extern void resetOpt(void);
 
 /*
@@ -89,9 +94,9 @@ extern void editor1Prompt(void);
 extern void editor2Prompt(void);
 extern void record1Disp(void);
 extern void record2Disp(void);
-extern void playback1Disp(void);
-extern void playback2Disp();
-extern void deleteDisp(void);
+extern void saveDisp(void);
+extern void playbackDisp(void);
+extern void editDisp(void);
 extern void resetDisp(void);
 extern void wave1Prompt(void);
 extern void wave2Prompt(void);
@@ -116,13 +121,6 @@ extern int timer0Read_us();
 extern void wait_us(int usec);
 extern void wait_ticks(unsigned long count);
 extern void waitOneSecond(unsigned long count);
-
-extern void timer1Init();
-extern void timer1Start();
-extern void timer1Stop();
-extern void timer1Reset();
-extern int timer1Read_us();
-extern void wait1_us(int usec);
 
 extern void timer2Init();
 extern void configT2MR3(int freq);
