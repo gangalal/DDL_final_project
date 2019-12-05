@@ -19,6 +19,7 @@ void memWrite(int* data) {
  * Read from the EEPROM
  */
 void memRead(int* data) {
+	 int memData[25];
 	int addr = 0b1010000; // EEprom address
 	int count = 0;
 	I2CStart();
@@ -31,10 +32,12 @@ void memRead(int* data) {
 			int tester = I2CRead(1);
 			if (tester == data[i]){
 				count++;
+				memData[i] = tester;
 		  } else {
 			int tester = I2CRead(0);
 				if (tester == data[i]) {
 				count++;
+				memData[i] = tester;
 				}
 			}
 
@@ -45,7 +48,7 @@ void memRead(int* data) {
 	//if (count == 3) { // if the counter sees the correct 25 notes
 		// insert printf command or LCD screen shot
 		for (int i = 0; i < 25; i ++)
-			printf("stored data %d\n", data[i]);
+			printf("stored data %x\n", memData[i]);
 	//}
 
 }

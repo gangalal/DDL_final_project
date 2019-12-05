@@ -1,10 +1,3 @@
-/*
- * final.h
- *
- *  Created on: Nov 30, 2019
- *      Author: Jess_
- */
-
 #ifndef FINAL_H_
 #define FINAL_H_
 
@@ -74,37 +67,39 @@ extern void playSquareWF(int* byte);
 extern void playTriangleWF(int* byte);
 extern void playSineWF(int* byte);
 extern void recordSquareWF(int* byte);
+extern void recordTriangleWF(int* byte);
+extern void playMIDIChord(int*byte);
 
 /*
  * Functions for selected options
  */
 extern int data[8];
-extern void preRecordingRoutine(void);
 extern void recordOpt(void);
-extern void saveOpt(void);
 extern void playbackOpt(void);
+extern void playChordsOpt(void);
+extern void saveOpt(void);
 extern void editOpt(void);
 extern void resetOpt(void);
+extern void initialRoutine(void);
+extern void preRecordingRoutine(void);
+extern void postRecordingRoutine(void);
 
 /*
  * Display and prompt functions
  */
 extern void welcomeDisp(void);
-extern void editor1Prompt(void);
-extern void editor2Prompt(void);
+extern void editorDisp(void);
+extern void initialPrompt(void);
+extern void postRecPrompt(void);
 extern void record1Disp(void);
 extern void record2Disp(void);
+extern void chordExitDisp(void);
 extern void saveDisp(void);
 extern void playbackDisp(void);
 extern void editDisp(void);
 extern void resetDisp(void);
-extern void wave1Prompt(void);
-extern void wave2Prompt(void);
-extern void squareWaveDisp(void);
-extern void triangleWaveDisp(void);
-extern void sineWaveDisp(void);
+extern void click1Disp(void);
 extern void click1Prompt(void);
-extern void click2Prompt(void);
 extern void slowClickDisp(void);
 extern void normalClickDisp(void);
 extern void fastClickDisp(void);
@@ -122,8 +117,17 @@ extern void wait_us(int usec);
 extern void wait_ticks(unsigned long count);
 extern void waitOneSecond(unsigned long count);
 
+extern void timer1Init();
+extern void timer1Start();
+extern void timer1Stop();
+extern void timer1Reset();
+extern int timer1Read_us();
+extern void wait1_us(int usec);
+
 extern void timer2Init();
+extern void configT2MR2(int freq);
 extern void configT2MR3(int freq);
+extern void configT2Chord(int freq1, int freq2);
 
 extern void timer3Stop();
 extern void timer3Init();

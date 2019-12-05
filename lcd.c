@@ -77,7 +77,7 @@ void displayChar(int data) {
 /*
  * Write words using strings to LCD display
  */
-void displayWords2(char* array, int arraySize) {
+void displayWords(char* array, int arraySize) {
 	LCDinitCmd();
 	for (int i = 0; i < arraySize; i++) {
 		displayChar((int) array[i]);

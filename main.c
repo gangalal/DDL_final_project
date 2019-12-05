@@ -18,11 +18,13 @@
 #include "final.h"
 
 int main(void) {
+
 	PINSEL1 = (1 << 21) | (0 << 20); 	// enable AOUT pins
 
 	timer0Init();
 	timer2Init();
 	timer3Init();
+	configT2MR3(0);
 	timer3Stop();
 
 	I2CInit();
@@ -40,44 +42,43 @@ int main(void) {
 	 * Test welcome display
 	 */
 	welcomeDisp();
-	waitOneSecond(5);
-	configT2MR3(0);
+	wait_us(5000000);
+
+	//configT2Chord(0,0);
 
 	while (1) {
 //		fillWaveTable();
 
-		while (keypad[0][0] == 0 && keypad[0][1] == 0 && keypad[0][2] == 0) {
-			/*
-			 *
-			 */
+		while (keypad[0][0] == 0 && keypad[2][0] == 0 && keypad[2][1] == 0) {
+
+			initialRoutine();
+		}
+
+		if (keypad[2][0] == 1) {
+
 			preRecordingRoutine();
 		}
 
-		/*
-		 * Choose click track based on user selection from pre-recording routine
-		 */
-		if (keypad[2][0] == 1) {
-			configT3MR0(2);
+		while (keypad[2][1] == 1) {
+			chordExitDisp();
+			playChordsOpt();
 		}
-		else if (keypad[2][1] == 1) {
-			configT3MR0(3);
-		}
-		else if (keypad[2][2] == 1) {
-			configT3MR0(4);
-		}
-		else {
-			timer3Stop();
-		}
+		 // Choose click track based on user selection from pre-recording routine
+		 if (keypad[1][0] == 1) {
+		 configT3MR0(2);
+		 } else if (keypad[1][1] == 1) {
+		 configT3MR0(3);
+		 } else if (keypad[1][2] == 1) {
+		 configT3MR0(4);
+		 } else {
+		 timer3Stop();
+		 }
 
-		/*
-		 * record song; reset keypad selections
-		 */
-		recordOpt();
+		 // record song; reset keypad selections
+		 recordOpt();
 
-		/*
-		 * User can select playback, edit, or reset
-		 */
-		postRecordingRoutine();
+		 // User can select playback, edit, or reset
+		 postRecordingRoutine();
 	}
 
 	return 0;

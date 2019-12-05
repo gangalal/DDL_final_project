@@ -12,8 +12,17 @@ void welcomeDisp(void) {
 /*
  * "Use the keypad to select option."
  */
-void editor1Prompt(void) {
+void editorDisp(void) {
 	char options1[] = "Use the keypad to select option";
+	displayWords(options1,(sizeof(options1)-1));
+	wait_us(250);
+}
+
+/*
+ * "7) Play notes and record 8) Play chords freely"
+ */
+void initialPrompt(void) {
+	char options1[] = "7) Play notes and record 8) Play chords ";
 	displayWords(options1,(sizeof(options1)-1));
 	wait_us(250);
 }
@@ -21,7 +30,7 @@ void editor1Prompt(void) {
 /*
  * "1) Playback 2) Save 3) Edit *) Reset"
  */
-void editor2Prompt(void) {
+void postRecPrompt(void) {
 	char options2[] = "1) Playback 2) Save 3) Edit *) Reset";
 	displayWords(options2,(sizeof(options2)-1));
 	wait_us(250);
@@ -45,6 +54,14 @@ void record2Disp(void) {
 	wait_us(250);
 }
 
+/*
+ * "Playing chords. Press * to exit."
+ */
+void chordExitDisp(void) {
+	char chord[] = "Playing chords. Press * to exit.";
+	displayWords(chord,(sizeof(chord)-1));
+	wait_us(250);
+}
 /*
  * "You have selected to save your song."
  */
@@ -75,7 +92,7 @@ void editDisp(void) {
  * "Reset selected. Press * to continue."
  */
 void resetDisp(void) {
-	char reset[] = "Reset selected. Press * to continue.";
+	char reset[] = "Reset selected.";
 	displayWords(reset,(sizeof(reset)-1));
 	wait_us(250);
 }
@@ -83,17 +100,17 @@ void resetDisp(void) {
 /*
  * "Please select the click speed using the keypad"
  */
-void click1Prompt(void) {
-	char click1[] = "Please select the click speed using the keypad:";
+void click1Disp(void) {
+	char click1[] = "Please select the click speed";
 	displayWords(click1,(sizeof(click1)-1));
 	wait_us(250);
 }
 
 /*
- * "7) Slow 8) Normal 9) Fast C) None
+ * "4) Slow 5) Normal 6) Fast B) None"
  */
-void click2Prompt(void) {
-	char click2[] = "7) Slow 8) Normal 9) Fast C) None";
+void click1Prompt(void) {
+	char click2[] = "4) Slow 5) Normal 6) Fast B) None";
 	displayWords(click2,(sizeof(click2)-1));
 	wait_us(250);
 }

@@ -122,28 +122,25 @@ void setRow4(void) {
 }
 
 /*
- * Row 1 corresponds to main editor options: Record, Playback, Delete
+ * Row 1 corresponds to main editor options: Playback, Save, Edit
  */
 void checkRow1(void) {
 
 	setRow1();
 	wait_us(250);
 
-	editor1Prompt();
-	wait_us(5000000);
-	editor2Prompt();
 
 	if (((FIO0PIN >> 17) & 0x01) == 1) {
 		if (keypad[0][0] == 0) {
 			playbackDisp();
 			playbackOpt();	// TODO make playbackOpt() EEPROMsaveDisp();
 			memset(keypad[0],0,sizeof(keypad[0]));
-			keypad[0][0] = 1;
+			keypad[0][0] = 0;
 		}
 		wait_us(50000);
 	}
 	if (((FIO0PIN >> 15) & 0x01) == 1) {
-		if (keypad[0][1]) {
+		if (keypad[0][1] == 0) {
 			saveDisp();
 			saveOpt();		// TODO make a saveOpt() EEPROM
 			memset(keypad[0],0,sizeof(keypad[0]));
@@ -152,11 +149,11 @@ void checkRow1(void) {
 		wait_us(50000);
 	}
 	else if (((FIO0PIN >> 16) & 0x01) == 1) {
-		if(keypad[0][2]) {
+		if(keypad[0][2] == 0) {
 			editDisp();
-			deleteOpt();	// TODO make deleteOpt() EEPROM
-			memset(keypad[0],0,sizeof(keypad[0]));
-			keypad[0][2] = 1;
+			editOpt();	// TODO make deleteOpt() EEPROM
+//			memset(keypad[0],0,sizeof(keypad[0]));
+//			keypad[0][2] = 1;
 		}
 		wait_us(50000);
 	}
@@ -227,12 +224,8 @@ void checkRow3(void) {
 	setRow3();
 	wait_us(250);
 
-	/*
-	 * Scan each Column input for high value
-	 */
 	if (((FIO0PIN >> 17) & 0x01) == 1) {
-			if (keypad[2][0] == 0) {
-
+		if (keypad[2][0] == 0) {
 			memset(keypad[2],0,sizeof(keypad[2]));
 			keypad[2][0] = 1;
 		}
@@ -240,7 +233,6 @@ void checkRow3(void) {
 	}
 	else if (((FIO0PIN >> 15) & 0x01) == 1) {
 		if (keypad[2][1] == 0) {
-
 			memset(keypad[2],0,sizeof(keypad[2]));
 			keypad[2][1] = 1;
 		}
@@ -248,7 +240,6 @@ void checkRow3(void) {
 	}
 	else if (((FIO0PIN >> 16) & 0x01) == 1) {
 		if (keypad[2][2] == 0) {
-
 			memset(keypad[2],0,sizeof(keypad[2]));
 			keypad[2][2] = 1;
 		}
@@ -256,7 +247,6 @@ void checkRow3(void) {
 	}
 	else if (((FIO0PIN >> 23) & 0x01) == 1) {
 		if (keypad[2][3] == 0) {
-
 			memset(keypad[2],0,sizeof(keypad[2]));
 			keypad[2][3] = 1;
 		}
@@ -280,6 +270,7 @@ void checkRow4(void) {
 		if (keypad[3][0] == 0) {
 			resetOpt();
 			timer3Stop();
+			configT2MR3(0);
 		}
 		wait_us(50000);
 	}

@@ -40,6 +40,8 @@
 #define T2MCR (*(volatile unsigned int *)(0x40090014))      // MCR Match Register for Timer 2
 #define T2CTCR (*(volatile unsigned int *)(0x40090070))     // Count Control Register for Timer 2 Selects timer/counter mode
 #define T2MR3 (*(volatile unsigned int *)(0x40090024))      // Timer 2 Match Register 3
+#define T2MR2 (*(volatile unsigned int *)(0x40090020))      // Timer 2 Match Register 2
+
 
 #define T3TCR (*(volatile unsigned int *)(0x40094004))		// Timer 3 Timer Control Register
 #define T3TC (*(volatile unsigned int *)(0x40094008))		// Timer 3 Timer Counter
