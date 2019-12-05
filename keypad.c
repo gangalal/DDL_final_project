@@ -129,27 +129,31 @@ void checkRow1(void) {
 	setRow1();
 	wait_us(250);
 
-//	if (((FIO0PIN >> 17) & 0x01) == 1) {
-//		if (keypad[0][0] == 0) {
-//			preRecordingRoutine();
-//			recordOpt();	// TODO make recordOpt() EEPROM
-//			memset(keypad[0],0,sizeof(keypad[0]));
-//			keypad[0][0] = 1;
-//		}
-//		wait_us(50000);
-//	}
+	editor1Prompt();
+	wait_us(5000000);
+	editor2Prompt();
+
+	if (((FIO0PIN >> 17) & 0x01) == 1) {
+		if (keypad[0][0] == 0) {
+			playbackDisp();
+			playbackOpt();	// TODO make playbackOpt() EEPROMsaveDisp();
+			memset(keypad[0],0,sizeof(keypad[0]));
+			keypad[0][0] = 1;
+		}
+		wait_us(50000);
+	}
 	if (((FIO0PIN >> 15) & 0x01) == 1) {
-		if (keypad[0][1] == 0) {
-			playback1Disp();
-			playbackOpt();	// TODO make playbackOpt() EEPROM
+		if (keypad[0][1]) {
+			saveDisp();
+			saveOpt();		// TODO make a saveOpt() EEPROM
 			memset(keypad[0],0,sizeof(keypad[0]));
 			keypad[0][1] = 1;
 		}
 		wait_us(50000);
 	}
 	else if (((FIO0PIN >> 16) & 0x01) == 1) {
-		if(keypad[0][2] == 0) {
-			deleteDisp();
+		if(keypad[0][2]) {
+			editDisp();
 			deleteOpt();	// TODO make deleteOpt() EEPROM
 			memset(keypad[0],0,sizeof(keypad[0]));
 			keypad[0][2] = 1;
@@ -179,7 +183,7 @@ void checkRow2(void) {
 
 	if (((FIO0PIN >> 17) & 0x01) == 1) {
 		if (keypad[1][0] == 0) {
-			squareWaveDisp();
+			slowClickDisp();
 			memset(keypad[1],0,sizeof(keypad[1]));
 			keypad[1][0] = 1;
 		}
@@ -187,7 +191,7 @@ void checkRow2(void) {
 	}
 	else if (((FIO0PIN >> 15) & 0x01) == 1) {
 		if (keypad[1][1] == 0) {
-			triangleWaveDisp();
+			normalClickDisp();
 			memset(keypad[1],0,sizeof(keypad[1]));
 			keypad[1][1] = 1;
 		}
@@ -195,14 +199,17 @@ void checkRow2(void) {
 	}
 	else if (((FIO0PIN >> 16) & 0x01) == 1) {
 		if (keypad[1][2] == 0) {
-			sineWaveDisp();
+			fastClickDisp();
 			memset(keypad[1],0,sizeof(keypad[1]));
 			keypad[1][2] = 1;
 		}
 		wait_us(50000);
 	}
 	else if (((FIO0PIN >> 23) & 0x01) == 1) {
-		printf("You have pressed B.\n");
+		if (keypad[1][3] == 0) {
+			noClickDisp();
+			memset(keypad[2],0,sizeof(keypad[2]));
+		}
 		wait_us(50000);
 	}
 
@@ -225,7 +232,7 @@ void checkRow3(void) {
 	 */
 	if (((FIO0PIN >> 17) & 0x01) == 1) {
 			if (keypad[2][0] == 0) {
-			slowClickDisp();
+
 			memset(keypad[2],0,sizeof(keypad[2]));
 			keypad[2][0] = 1;
 		}
@@ -233,7 +240,7 @@ void checkRow3(void) {
 	}
 	else if (((FIO0PIN >> 15) & 0x01) == 1) {
 		if (keypad[2][1] == 0) {
-			normalClickDisp();
+
 			memset(keypad[2],0,sizeof(keypad[2]));
 			keypad[2][1] = 1;
 		}
@@ -241,7 +248,7 @@ void checkRow3(void) {
 	}
 	else if (((FIO0PIN >> 16) & 0x01) == 1) {
 		if (keypad[2][2] == 0) {
-			fastClickDisp();
+
 			memset(keypad[2],0,sizeof(keypad[2]));
 			keypad[2][2] = 1;
 		}
@@ -249,7 +256,7 @@ void checkRow3(void) {
 	}
 	else if (((FIO0PIN >> 23) & 0x01) == 1) {
 		if (keypad[2][3] == 0) {
-			noClickDisp();
+
 			memset(keypad[2],0,sizeof(keypad[2]));
 			keypad[2][3] = 1;
 		}
@@ -271,8 +278,7 @@ void checkRow4(void) {
 
 	if (((FIO0PIN >> 17) & 0x01) == 1) {
 		if (keypad[3][0] == 0) {
-			resetDisp();
-			memset(keypad,0,sizeof(keypad));
+			resetOpt();
 			timer3Stop();
 		}
 		wait_us(50000);
