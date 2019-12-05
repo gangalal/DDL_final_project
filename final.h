@@ -58,11 +58,7 @@ extern int count;
 extern int receivedData[25];
 extern int noteLength[25];
 extern void configMIDI(void);
-extern void playSquareWF(int* byte);
-extern void playTriangleWF(int* byte);
-extern void playSineWF(int* byte);
 extern void recordSquareWF(int* byte);
-extern void recordTriangleWF(int* byte);
 extern void playMIDIChord(int*byte);
 
 /*
@@ -74,7 +70,6 @@ extern void playbackOpt(void);
 extern void playChordsOpt(void);
 extern void saveOpt(void);
 extern void editOpt(void);
-extern void edit2Disp(void);
 extern void resetOpt(void);
 extern void initialRoutine(void);
 extern void preRecordingRoutine(void);
@@ -93,6 +88,7 @@ extern void chordExitDisp(void);
 extern void saveDisp(void);
 extern void playbackDisp(void);
 extern void editDisp(void);
+extern void edit2Disp(void);
 extern void resetDisp(void);
 extern void click1Disp(void);
 extern void click1Prompt(void);
@@ -123,7 +119,6 @@ extern void wait1_us(int usec);
 extern void timer2Init();
 extern void configT2MR2(int freq);
 extern void configT2MR3(int freq);
-extern void configT2Chord(int freq1, int freq2);
 
 extern void timer3Stop();
 extern void timer3Init();

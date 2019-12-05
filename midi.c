@@ -66,56 +66,6 @@ void recordSquareWF(int* byte) {
 
 }
 
-void recordTriangleWF(int* byte) {
-	timer1Reset();
-	timer1Start();
-	if (byte[0] == 0x3c) {
-		triangleWave(700, 35);		// play middle c (C4)
-		receivedData[count] = 0x3c;
-		count++;
-		printf("count %d\n", count);
-	} else if (byte[0] == 0x3e) {
-		triangleWave(700, 40);		// play D4
-		receivedData[count] = 0x3e;
-		count++;
-		printf("count %d\n", count);
-	} else if (byte[0] == 0x40) {
-		triangleWave(700, 45);		// play E4
-		receivedData[count] = 0x40;
-		count++;
-		printf("count %d\n", count);
-	} else if (byte[0] == 0x41) {
-		triangleWave(700, 47);		// play F4
-		receivedData[count] = 0x41;
-		count++;
-		printf("count %d\n", count);
-	} else if (byte[0] == 0x43) {
-		triangleWave(700, 55);		// play G4
-		receivedData[count] = 0x43;
-		count++;
-		printf("count %d\n", count);
-	} else if (byte[0] == 0x45) {
-		triangleWave(700, 60);		// play A4
-		receivedData[count] = 0x45;
-		count++;
-		printf("count %d\n", count);
-//		} else if (byte[0] == 0x47) {
-//			configT2MR3(490);		// play B4
-//			receivedData[count] = 0x47;
-//			count++;
-//			printf("count %d\n", count);
-	} else if (byte[0] == 0x48) {
-		triangleWave(700, 75);		// play C5 (full octave)
-		receivedData[count] = 0x48;
-		count++;
-		printf("count %d\n", count);
-	}
-	timer1Stop();
-	noteLength[count] = timer1Read_us();
-
-}
-
-
 void playMIDIChord(int* byte) {
 	if (byte[0] == 0x3c) {
 		configT2MR3(327);
