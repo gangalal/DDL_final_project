@@ -8,11 +8,6 @@
 #include "registerDef.h"
 
 /*
- * Generate click track
- */
-extern void clickTrack(void);
-
-/*
  * EEPROM functions
  */
 extern void memWrite(int* data);
@@ -79,6 +74,7 @@ extern void playbackOpt(void);
 extern void playChordsOpt(void);
 extern void saveOpt(void);
 extern void editOpt(void);
+extern void edit2Disp(void);
 extern void resetOpt(void);
 extern void initialRoutine(void);
 extern void preRecordingRoutine(void);

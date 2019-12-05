@@ -54,7 +54,7 @@ int main(void) {
 			initialRoutine();
 		}
 
-		if (keypad[2][0] == 1) {
+		if (keypad[2][0] == 1 || keypad[0][2] == 1) {
 
 			preRecordingRoutine();
 		}

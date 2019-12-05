@@ -2,6 +2,7 @@
 
 int receivedData[25];
 int noteLength[25];
+
 void configMIDI() {
 	PCONP |= (1 << 3); //on reset UART is enable
 	PCLKSEL0 &= ~(1 << 6);
@@ -114,35 +115,6 @@ void recordTriangleWF(int* byte) {
 
 }
 
-/*
- void playSineWF(int* byte) {
- if (byte[0] == 0x3c) {
- sineWave(259);		// play middle c (C4)
- U0FCR |= (1 << 1); // clear FIFO Rx
- } else if (byte[0] == 0x3e) {
- sineWave(291);		// play D4
- U0FCR |= (1 << 1); // clear FIFO Rx
- } else if (byte[0] == 0x40) {
- sineWave(327);		// play E4
- U0FCR |= (1 << 1); // clear FIFO Rx
- } else if (byte[0] == 0x41) {
- sineWave(347);		// play F4
- U0FCR |= (1 << 1); // clear FIFO Rx
- } else if (byte[0] == 0x43) {
- sineWave(389);		// play G4
- U0FCR |= (1 << 1); // clear FIFO Rx
- } else if (byte[0] == 0x45) {
- sineWave(437);		// play A4
- U0FCR |= (1 << 1); // clear FIFO Rx
- } else if (byte[0] == 0x47) {
- sineWave(490);		// play B4
- U0FCR |= (1 << 1); // clear FIFO Rx
- } else if (byte[0] == 0x48) {
- sineWave(519);		// play C5 (full octave)
- U0FCR |= (1 << 1); // clear FIFO Rx
- }
- }
- */
 
 void playMIDIChord(int* byte) {
 	if (byte[0] == 0x3c) {

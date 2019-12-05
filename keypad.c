@@ -135,7 +135,6 @@ void checkRow1(void) {
 			playbackDisp();
 			playbackOpt();	// TODO make playbackOpt() EEPROMsaveDisp();
 			memset(keypad[0],0,sizeof(keypad[0]));
-			keypad[0][0] = 0;
 		}
 		wait_us(50000);
 	}
@@ -144,7 +143,6 @@ void checkRow1(void) {
 			saveDisp();
 			saveOpt();		// TODO make a saveOpt() EEPROM
 			memset(keypad[0],0,sizeof(keypad[0]));
-			keypad[0][1] = 1;
 		}
 		wait_us(50000);
 	}
@@ -152,8 +150,7 @@ void checkRow1(void) {
 		if(keypad[0][2] == 0) {
 			editDisp();
 			editOpt();	// TODO make deleteOpt() EEPROM
-//			memset(keypad[0],0,sizeof(keypad[0]));
-//			keypad[0][2] = 1;
+			keypad[0][2] = 1;
 		}
 		wait_us(50000);
 	}

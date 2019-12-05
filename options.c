@@ -6,8 +6,9 @@ int count = 0;
 /*
  * Record data from MIDI keyboard
  */
-extern void recordOpt(void) {
+void recordOpt(void) {
 	record2Disp();
+	count = 0;
 	U0LCR &= ~(1 << 7); // must be zero to access RBR
 	while (count < 25) {
 		timer1Reset();
@@ -37,7 +38,7 @@ extern void recordOpt(void) {
 /*
  * Play back recorded song
  */
-extern void playbackOpt(void) {
+void playbackOpt(void) {
 	// TODO playback function will probably come from EEPROM
 	playbackDisp();
 	for (int i = 0; i < 25; i++) {
@@ -114,35 +115,37 @@ void playChordsOpt() {
 /*
  * Save current song
  */
-extern void saveOpt() {
-
+void saveOpt() {
+	memset(keypad, 0, sizeof(keypad));
 }
+
 /*
  * Delete recorded song
  */
-extern void editOpt(void) {
+void editOpt(void) {
 // TODO delete function will probably come from EEPROM
 	memset(receivedData, 0, sizeof(receivedData));
 	memset(noteLength, 0, sizeof(noteLength));
-	keypad[0][0] = 1;
-	keypad[2][0] = 1;
+	count = 0;
 }
 
 /*
  * Reset editor
  */
-extern void resetOpt(void) {
+void resetOpt(void) {
 // TODO reset function
+	resetDisp();
 	memset(receivedData, 0, sizeof(receivedData));
 	memset(noteLength, 0, sizeof(noteLength));
 	memset(keypad, 0, sizeof(keypad));
+	count = 0;
 }
 
 
 /*
  * This is the initial routine the user sees before the edit takes place
  */
-extern void initialRoutine(void) {
+void initialRoutine(void) {
 	editorDisp();
 	wait_us(2000000);
 	initialPrompt();
@@ -153,14 +156,17 @@ extern void initialRoutine(void) {
 	wait_us(2000000);
 }
 
-extern void preRecordingRoutine(void) {
+void preRecordingRoutine(void) {
 	memset(keypad[1], 0, sizeof(keypad[1]));
 	memset(keypad[2], 0, sizeof(keypad[2]));
-	if (keypad[0][2] == 1) {
-		keypad[0][2] = 0;
+	if (keypad[0][2] == 0) {
+		record1Disp();
+		wait_us(2000000);
 	}
-	record1Disp();
-	wait_us(2000000);
+	else if (keypad[0][2] == 1) {
+		record2Disp();
+		wait_us(2000000);
+	}
 
 	click1Disp();
 	wait_us(2000000);
@@ -174,7 +180,7 @@ extern void preRecordingRoutine(void) {
 /*
  * This is the routine the user sees just after the recording has occurred
  */
-extern void postRecordingRoutine(void) {
+void postRecordingRoutine(void) {
 	editorDisp();
 	wait_us(2000000);
 	postRecPrompt();
