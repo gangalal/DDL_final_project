@@ -128,9 +128,9 @@ extern void postRecordingRoutine(void) {
 	editor1Prompt();
 	wait_us(2000000);
 	editor2Prompt();
-	while (keypad[0][0] == 0 && keypad[0][1] == 0 && keypad[0][2] == 0) {
+	while (keypad[0][0] == 0 && keypad[0][0] == 0 && keypad[0][1] == 0 && keypad[0][2] == 0) {
 		checkRow1();
-		if (keypad[0][1] == 0 && keypad[0][2] == 0) {
+		if (keypad[0][0] == 0 && keypad[0][1] == 0 && keypad[0][2] == 0) {
 			checkRow4();
 		}
 	}
