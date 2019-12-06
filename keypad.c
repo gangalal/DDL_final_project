@@ -171,23 +171,35 @@ void checkRow1(void) {
 			wait_us(50000);
 		}
 
-		// save current song
+		// save current song to EEPROM
 		if (((FIO0PIN >> 15) & 0x01) == 1) {
 			if (keypad[0][1] == 0) {
-				// use EEPROM function
-				saveOpt();
+				keypad[0][1] = 1;
+				saveToMemOpt();
+
+				wait_us(2000000);
+				rowReset();
+				setRow4();
+				wait_us(250);
+
+				playFromMemDisp();
+				while (keypad[0][1] == 1) {
+					if (((FIO0PIN >> 15) & 0x01) == 1) {
+						playFromMemOpt();
+						keypad[3][1] = 0;
+					}
+				}
 			}
 			wait_us(50000);
 
-		// edit current song
+			// edit current song
 		} else if (((FIO0PIN >> 16) & 0x01) == 1) {
 			if (keypad[0][2] == 0) {
 				editOpt();
 				keypad[0][2] = 1;
 				keypad[2][0] = 1;
-
+				resetRow2Sel();
 			}
-			wait_us(50000);
 		}
 		// check for reset
 		if (keypad[0][0] == 0 && keypad[0][1] == 0 && keypad[0][2] == 0) {
@@ -207,6 +219,7 @@ void checkRow1(void) {
  * The readMidiByte will need to check the status of this row to produce the right waveform.
  */
 void checkRow2(void) {
+
 	while (keypad[2][0] == 1 && keypad[1][0] == 0 && keypad[1][1] == 0
 			&& keypad[1][2] == 0 && keypad[1][3] == 0) {
 		clickDisp();
@@ -286,10 +299,7 @@ void checkRow3(void) {
 			if (keypad[2][1] == 0) {
 				// keep track of the fact that we are in chord playing mode
 				keypad[2][1] = 1;
-
-				while (keypad[2][1] == 1) {
-					playChordsOpt();
-				}
+				playChordsOpt();
 				resetAllSel();
 			}
 			wait_us(50000);
@@ -307,6 +317,7 @@ void checkRow3(void) {
 			wait_us(50000);
 		}
 	}
+
 	wait_us(50000);
 	rowReset();
 	wait_us(250);
@@ -344,20 +355,5 @@ void checkRow4(void) {
 	wait_us(50000);
 	rowReset();
 	wait_us(250);
-
-}
-
-/*
- * Scan for pressed key
- * We can combine the checkRow functions if we want to - kept it separate until
- * we determine which rows we will be using. This will depend on how many
- * functions we end up needing to use on the keypad.
- */
-void keyScan(void) {
-
-	checkRow1();
-	checkRow2();
-	checkRow3();
-	checkRow4();
 
 }

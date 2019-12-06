@@ -13,8 +13,8 @@ void welcomeDisp(void) {
  * "Use the keypad to select option."
  */
 void editorDisp(void) {
-	char options1[] = "Use the keypad to select option";
-	displayWords(options1,(sizeof(options1)-1));
+	char options[] = "Use the keypad to select option";
+	displayWords(options,(sizeof(options)-1));
 	wait_us(250);
 }
 
@@ -22,8 +22,8 @@ void editorDisp(void) {
  * "7) Play notes and record 8) Play chords"
  */
 void initialPrompt(void) {
-	char options1[] = "7) Play notes and record 8) Play chords ";
-	displayWords(options1,(sizeof(options1)-1));
+	char options[] = "7) Play notes and record 8) Play chords ";
+	displayWords(options,(sizeof(options)-1));
 	wait_us(250);
 }
 
@@ -31,8 +31,8 @@ void initialPrompt(void) {
  * "1) Playback 2) Save 3) Edit *) Reset"
  */
 void postRecPrompt(void) {
-	char options2[] = "1) Playback 2) Save 3) Edit *) Reset";
-	displayWords(options2,(sizeof(options2)-1));
+	char options[] = "1) Playback 2) Save 3) Edit *) Reset";
+	displayWords(options,(sizeof(options)-1));
 	wait_us(250);
 }
 
@@ -57,19 +57,37 @@ void recordPrompt(void) {
 /*
  * "Playing chords. Press * to exit."
  */
-void chordExitDisp(void) {
+void chordDisp(void) {
 	char chord[] = "Playing chords. Press * to exit.";
 	displayWords(chord,(sizeof(chord)-1));
 	wait_us(250);
 }
 /*
- * "You have selected to save your song."
+ * "Saving song to memory."
  */
-void saveDisp(void) {
-	char save[] = "You have selected to save your song.";
+void saveToMemDisp(void) {
+	char save[] = "Saving song to memory.";
 	displayWords(save,(sizeof(save)-1));
 	wait_us(250);
 }
+
+/*
+ * "Press 0 to access your song from memory."
+ */
+void playFromMemDisp(void) {
+	char play[] = "Press 0 to access your song from memory.";
+	displayWords(play,(sizeof(play)-1));
+	wait_us(250);
+}
+/*
+ * "Accessing song from memory."
+ */
+void accessingDisp(void) {
+	char save[] = "Accessing song from memory.";
+	displayWords(save,(sizeof(save)-1));
+	wait_us(250);
+}
+
 /*
  * "You have selected to listen to your song."
  */
@@ -91,8 +109,8 @@ void lovelySong(void) {
  * "You have selected to edit your song."
  */
 void editDisp(void) {
-	char delete[] = "You have selected to edit your song.";
-	displayWords(delete,(sizeof(delete)-1));
+	char edit[] = "You have selected to edit your song.";
+	displayWords(edit,(sizeof(edit)-1));
 	wait_us(250);
 }
 

@@ -56,5 +56,7 @@ void wait1_us(int usec) {
 	timer1Start();
 	timer1Reset();
 	while(timer1Read_us() < usec) {
+
 	}
+
 }

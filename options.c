@@ -4,9 +4,10 @@ int data[8];
 int count = 0;
 
 /*
- * Record data from MIDI keyboard
+ * Record data from MIDI keyboard and temporarily store
  */
 void recordOpt(void) {
+
 	// only record when the record option has been selected
 	while (keypad[2][0] == 1) {
 
@@ -34,27 +35,29 @@ void recordOpt(void) {
 				data[7] = U0RBR;
 
 				recordSquareWF(data);
-
 			}
+
 			timer1Stop();
 			noteLength[count] = 6500 * timer1Read_us();
-
 		}
+
+		// Reset
 		configT2MR3(0);
 		timer3Stop();
 		count = 0;
-		// reset the record and edit option
 		keypad[2][0] = 0;
 		keypad[0][2] = 0;
 	}
+
 }
 
 /*
- * Play back recorded song
+ * Play back recorded song stored temporarily
  */
 void playbackOpt(void) {
-	// TODO playback function will probably come from EEPROM
+
 	lovelySong();
+
 	for (int i = 0; i < 25; i++) {
 		if (receivedData[i] == 0x3c) {
 			configT2MR3(259);		// play middle c (C4)
@@ -90,64 +93,95 @@ void playbackOpt(void) {
 			configT2MR3(0);
 		}
 	}
-	configT2MR3(0);
+
+	timer2Stop();
 	timer3Stop();
 	keypad[0][0] = 0;
 }
 
+/*
+ * Free play two-note chords
+ */
 void playChordsOpt() {
+	while (keypad[2][1] == 1) {
+		chordDisp();
 
-	chordExitDisp();
-	wait_us(2000000);
+		int data[8];
+		if (((U0LSR >> 0) & 1) == 1) {
 
-	int data[8];
-	if (((U0LSR >> 0) & 1) == 1) {
+			data[0] = U0RBR;
+			data[1] = U0RBR;
+			data[2] = U0RBR;
+			data[3] = U0RBR;
+			data[4] = U0RBR;
+			data[5] = U0RBR;
+			data[6] = U0RBR;
+			data[7] = U0RBR;
 
-		data[0] = U0RBR;
-		data[1] = U0RBR;
-		data[2] = U0RBR;
-		data[3] = U0RBR;
-		data[4] = U0RBR;
-		data[5] = U0RBR;
-		data[6] = U0RBR;
-		data[7] = U0RBR;
-
-		if (data[0] == 0x4a) {
-			configT2MR3(259); // C4
-			configT3MR0(389); //G4
+			if (data[0] == 0x4a) {
+				configT2MR3(259); // C4
+				configT3MR0(389); //G4
+			}
+			if (data[0] == 0x4c) {
+				configT2MR3(291); //D4
+				configT3MR0(437); //A4
+			}
+			if (data[0] == 0x4d) {
+				configT2MR3(347); //F4
+				configT3MR0(519); //C5
+			}
 		}
-		if (data[0] == 0x4c) {
-			configT2MR3(291); //D4
-			configT3MR0(437); //A4
-		}
-		if (data[0] == 0x4d) {
-			configT2MR3(347); //F4
-			configT3MR0(519); //C5
-		}
+
+		checkRow4();
 	}
-	checkRow4();
 }
 
 /*
- * Save current song
+ * Save current song to EEPROM
  */
-void saveOpt() {
+void saveToMemOpt(void) {
+
+	saveToMemDisp();
+
+	memWrite(storedData1);
+	memWrite(storedData2);
+	memWrite(storedData3);
+	memWrite(storedData4);
+
+}
+
+/*
+ * Play song currently stored in memory
+ */
+void playFromMemOpt(void) {
+
+	playFromMemDisp();
+
+	memRead(storedData1);
+	memRead(storedData2);
+	memRead(storedData3);
+	memRead(storedData4);
 }
 
 /*
  * Delete recorded song
  */
 void editOpt(void) {
+
 	editDisp();
+	wait_us(2000000);
+
 	memset(receivedData, 0, sizeof(receivedData));
 	memset(noteLength, 0, sizeof(noteLength));
 	count = 0;
+
 }
 
 /*
  * Reset editor
  */
 void resetOpt(void) {
+
 	resetDisp();
 	resetAllSel();
 	keypad[0][0] = 1;
@@ -156,58 +190,5 @@ void resetOpt(void) {
 	memset(receivedData, 0, sizeof(receivedData));
 	memset(noteLength, 0, sizeof(noteLength));
 	count = 0;
-}
 
-/*
- * This is the initial routine the user sees before the edit takes place
- */
-void initialRoutine(void) {
-	editorDisp();
-	wait_us(2000000);
-	initialPrompt();
-	wait_us(2000000);
-	while (keypad[2][0] == 0 && keypad[2][1] == 0) {
-		checkRow3();
-	}
-	wait_us(2000000);
-}
-
-void preRecordingRoutine(void) {
-	resetRow1Sel();
-	resetRow2Sel();
-
-	// if in editing mode
-	if (keypad[0][2] == 0) {
-		recordDisp();
-		wait_us(2000000);
-	}
-
-	// otherwise...
-	else if (keypad[0][2] == 1) {
-		recordPrompt();
-		wait_us(2000000);
-	}
-
-	clickDisp();
-	wait_us(2000000);
-	clickPrompt();
-	while (keypad[1][0] == 0 && keypad[1][1] == 0 && keypad[1][2] == 0) {
-		checkRow2();
-	}
-	wait_us(2000000);
-}
-
-/*
- * This is the routine the user sees just after the recording has occurred
- */
-void postRecordingRoutine(void) {
-	editorDisp();
-	wait_us(2000000);
-	postRecPrompt();
-	while (keypad[0][0] == 0 && keypad[0][1] == 0 && keypad[0][2] == 0) {
-		checkRow1();
-		if (keypad[0][0] == 0 && keypad[0][1] == 0 && keypad[0][2] == 0) {
-			checkRow4();
-		}
-	}
 }

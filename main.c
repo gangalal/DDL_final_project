@@ -14,7 +14,7 @@ int main(void) {
 	timer0Init();
 	timer2Init();
 	timer3Init();
-	configT2MR3(0);
+	timer2Stop();
 	timer3Stop();
 
 	I2CInit();
@@ -58,8 +58,9 @@ int main(void) {
 		// record song; reset keypad selections
 		recordOpt();
 
-		// User can select playback, edit, or reset
+		// User can select playback, save, edit, or reset
 		checkRow1();
 	}
+
 	return 0;
 }

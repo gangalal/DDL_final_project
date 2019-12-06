@@ -4,6 +4,7 @@ int receivedData[25];
 int noteLength[25];
 
 void configMIDI() {
+
 	PCONP |= (1 << 3); //on reset UART is enable
 	PCLKSEL0 &= ~(1 << 6);
 	PCLKSEL0 &= ~(1 << 7);	// set UART to 1 MHz
@@ -22,9 +23,11 @@ void configMIDI() {
 	// U0FCR &= ~(1 << 6);
 	// U0FCR |= (1 << 7);	// These two bits determine 8 bits characters to receive
 	U0LCR &= ~(1 << 7); // needs to clear
+
 }
 
 void recordSquareWF(int* byte) {
+
 	timer1Reset();
 	timer1Start();
 	if (byte[0] == 0x3c) {
@@ -65,14 +68,3 @@ void recordSquareWF(int* byte) {
 	noteLength[count] = timer1Read_us();
 
 }
-
-void playMIDIChord(int* byte) {
-	if (byte[0] == 0x3c) {
-		configT2MR3(327);
-
-		//configT2Chord(259, 327);
-		// play middle c (C4)
-	}
-
-}
-

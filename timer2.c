@@ -4,21 +4,24 @@
  * Start Timer 2
  */
 static inline void timer2Start() {
-	T2TCR |= (1 << 0);
-}
 
+	T2TCR |= (1 << 0);
+
+}
 
 /**
  * Reset Timer 2
  */
 static inline void timer2Reset() {
+
 	T2TCR |= (1 << 1);
 	while (T2TC != 0) {
 		// wait until timer has changed
 	}
-	T2TCR &= ~(1 << 1);	//
-}
 
+	T2TCR &= ~(1 << 1);
+
+}
 
 /*
  * Stop Timer 0
