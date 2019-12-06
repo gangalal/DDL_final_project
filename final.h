@@ -73,6 +73,7 @@ extern void recordOpt(void);
 extern void playbackOpt(void);
 extern void playChordsOpt(void);
 extern void saveToMemOpt(void);
+extern void playFromMem(int* storedData);
 extern void playFromMemOpt(void);
 extern void editOpt(void);
 extern void resetOpt(void);

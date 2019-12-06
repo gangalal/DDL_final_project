@@ -72,10 +72,10 @@ void saveToMemDisp(void) {
 }
 
 /*
- * "Press 0 to access your song from memory."
+ * "0) Access song from memory #) Exit save menu"
  */
 void playFromMemDisp(void) {
-	char play[] = "Press 0 to access your song from memory.";
+	char play[] = "0) Access song from memory #) Exit save menu";
 	displayWords(play,(sizeof(play)-1));
 	wait_us(250);
 }

@@ -96,13 +96,12 @@ void playbackOpt(void) {
 
 	timer2Stop();
 	timer3Stop();
-	keypad[0][0] = 0;
 }
 
 /*
  * Free play two-note chords
  */
-void playChordsOpt() {
+void playChordsOpt(void) {
 	while (keypad[2][1] == 1) {
 		chordDisp();
 
@@ -143,6 +142,8 @@ void saveToMemOpt(void) {
 
 	saveToMemDisp();
 
+	populateData();
+
 	memWrite(storedData1);
 	memWrite(storedData2);
 	memWrite(storedData3);
@@ -151,18 +152,64 @@ void saveToMemOpt(void) {
 }
 
 /*
- * Play song currently stored in memory
+ * Play 8 notes from song currently stored in memory
+ * This is used in the option to play from memory
+ */
+void playFromMem(int* storedData) {
+
+	for (int i = 0; i < 8; i++) {
+		if (storedData[i] == 0x3c) {
+			configT2MR3(259);		// play middle c (C4)
+			wait1_us(noteLength[i]);
+			configT2MR3(0);
+		} else if (storedData[i] == 0x3e) {
+			configT2MR3(291);		// play D4
+			wait1_us(noteLength[i]);
+			configT2MR3(0);
+		} else if (storedData[i] == 0x40) {
+			configT2MR3(327);		// play E4
+			wait1_us(noteLength[i]);
+			configT2MR3(0);
+		} else if (storedData[i] == 0x41) {
+			configT2MR3(347);		// play F4
+			wait1_us(noteLength[i]);
+			configT2MR3(0);
+		} else if (storedData[i] == 0x43) {
+			configT2MR3(389);		// play G4
+			wait1_us(noteLength[i]);
+			configT2MR3(0);
+		} else if (storedData[i] == 0x45) {
+			configT2MR3(437);		// play A4
+			wait1_us(noteLength[i]);
+			configT2MR3(0);
+		} else if (storedData[i] == 0x47) {
+			configT2MR3(490);		// play B4
+			wait1_us(noteLength[i]);
+			configT2MR3(0);
+		} else if (storedData[i] == 0x48) {
+			configT2MR3(519);		// play C5 (full octave)
+			wait1_us(noteLength[i]);
+			configT2MR3(0);
+		}
+	}
+
+	timer2Stop();
+	timer3Stop();
+}
+
+/*
+ * Play entire song currently stored in memory
  */
 void playFromMemOpt(void) {
 
-	playFromMemDisp();
+	lovelySong();
 
-	memRead(storedData1);
-	memRead(storedData2);
-	memRead(storedData3);
-	memRead(storedData4);
+	playFromMem(storedData1);
+	playFromMem(storedData2);
+	playFromMem(storedData3);
+	playFromMem(storedData4);
+
 }
-
 /*
  * Delete recorded song
  */
@@ -184,9 +231,6 @@ void resetOpt(void) {
 
 	resetDisp();
 	resetAllSel();
-	keypad[0][0] = 1;
-	keypad[0][1] = 1;
-	keypad[0][2] = 1;
 	memset(receivedData, 0, sizeof(receivedData));
 	memset(noteLength, 0, sizeof(noteLength));
 	count = 0;

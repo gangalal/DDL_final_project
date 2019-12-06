@@ -57,42 +57,42 @@ void memRead(int* data) {
 	for (int i = 0; i < 8; i++)
 		printf("stored data %x\n", memData[i]);
 
-	for (int i = 0; i < 8; i++) {
-		if (memData[i] == 0x3c) {
-			configT2MR3(259);		// play middle c (C4)
-			wait1_us(noteLength[i]);
-			configT2MR3(0);
-		} else if (memData[i] == 0x3e) {
-			configT2MR3(291);		// play D4
-			wait1_us(noteLength[i]);
-			configT2MR3(0);
-		} else if (memData[i] == 0x40) {
-			configT2MR3(327);		// play E4
-			wait1_us(noteLength[i]);
-			configT2MR3(0);
-		} else if (memData[i] == 0x41) {
-			configT2MR3(347);		// play F4
-			wait1_us(noteLength[i]);
-			configT2MR3(0);
-		} else if (memData[i] == 0x43) {
-			configT2MR3(389);		// play G4
-			wait1_us(noteLength[i]);
-			configT2MR3(0);
-		} else if (memData[i] == 0x45) {
-			configT2MR3(437);		// play A4
-			wait1_us(noteLength[i]);
-			configT2MR3(0);
-		} else if (memData[i] == 0x47) {
-			configT2MR3(490);		// play B4
-			wait1_us(noteLength[i]);
-			configT2MR3(0);
-		} else if (memData[i] == 0x48) {
-			configT2MR3(519);		// play C5 (full octave)
-			wait1_us(noteLength[i]);
-			configT2MR3(0);
-		}
-		wait_us(10000);
-	}
+//	for (int i = 0; i < 8; i++) {
+//		if (memData[i] == 0x3c) {
+//			configT2MR3(259);		// play middle c (C4)
+//			wait1_us(noteLength[i]);
+//			configT2MR3(0);
+//		} else if (memData[i] == 0x3e) {
+//			configT2MR3(291);		// play D4
+//			wait1_us(noteLength[i]);
+//			configT2MR3(0);
+//		} else if (memData[i] == 0x40) {
+//			configT2MR3(327);		// play E4
+//			wait1_us(noteLength[i]);
+//			configT2MR3(0);
+//		} else if (memData[i] == 0x41) {
+//			configT2MR3(347);		// play F4
+//			wait1_us(noteLength[i]);
+//			configT2MR3(0);
+//		} else if (memData[i] == 0x43) {
+//			configT2MR3(389);		// play G4
+//			wait1_us(noteLength[i]);
+//			configT2MR3(0);
+//		} else if (memData[i] == 0x45) {
+//			configT2MR3(437);		// play A4
+//			wait1_us(noteLength[i]);
+//			configT2MR3(0);
+//		} else if (memData[i] == 0x47) {
+//			configT2MR3(490);		// play B4
+//			wait1_us(noteLength[i]);
+//			configT2MR3(0);
+//		} else if (memData[i] == 0x48) {
+//			configT2MR3(519);		// play C5 (full octave)
+//			wait1_us(noteLength[i]);
+//			configT2MR3(0);
+//		}
+//		wait_us(10000);
+//	}
 
 }
 
@@ -124,12 +124,6 @@ void populateData(void) {
 	// store byte 24 with note values
 	for (int i = 0; i < 1; i++) {
 		storedData4[i] = receivedData[temp];
-		temp++;
-	}
-
-	// store bytes 25-31 with zeroes
-	for (int i = 0; i < 7; i++) {
-		storedData4[i] = 0;
 		temp++;
 	}
 

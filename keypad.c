@@ -153,12 +153,16 @@ void setRow4(void) {
  * Row 1 corresponds to main editor options: Playback, Save, Edit, or Reset
  */
 void checkRow1(void) {
-
-	while (keypad[0][0] == 0 && keypad[0][1] == 0 && keypad[0][2] == 0) {
+	if (keypad[2][1] == 1) {
+	}
+	else {
 		editorDisp();
 		wait_us(2000000);
 		postRecPrompt();
 		wait_us(2000000);
+	}
+
+	while (keypad[0][0] == 0 && keypad[0][1] == 0 && keypad[0][2] == 0) {
 
 		setRow1();
 		wait_us(250);
@@ -169,6 +173,9 @@ void checkRow1(void) {
 				playbackOpt();
 			}
 			wait_us(50000);
+			editorDisp();
+			wait_us(2000000);
+			postRecPrompt();
 		}
 
 		// save current song to EEPROM
@@ -185,10 +192,17 @@ void checkRow1(void) {
 				playFromMemDisp();
 				while (keypad[0][1] == 1) {
 					if (((FIO0PIN >> 15) & 0x01) == 1) {
+						accessingDisp();
 						playFromMemOpt();
 						keypad[3][1] = 0;
+						keypad[0][1] = 0;
+					}
+					else if (((FIO0PIN >> 16) & 0x01) == 1) {
+						keypad[0][1] = 0;
 					}
 				}
+				keypad[0][1] = 1;
+				resetRow2Sel();
 			}
 			wait_us(50000);
 
@@ -204,6 +218,12 @@ void checkRow1(void) {
 		// check for reset
 		if (keypad[0][0] == 0 && keypad[0][1] == 0 && keypad[0][2] == 0) {
 			checkRow4();
+			if (keypad[3][0] == 1) {
+				keypad[0][0] = 1;
+				keypad[0][1] = 1;
+				keypad[0][2] = 1;
+				keypad[3][0] = 0;
+			}
 		}
 	}
 	resetRow1Sel();
@@ -220,51 +240,51 @@ void checkRow1(void) {
  */
 void checkRow2(void) {
 
-	while (keypad[2][0] == 1 && keypad[1][0] == 0 && keypad[1][1] == 0
-			&& keypad[1][2] == 0 && keypad[1][3] == 0) {
+	if (keypad[2][0] == 1) {
 		clickDisp();
 		wait_us(2000000);
 		clickPrompt();
-		wait_us(2000000);
 
-		setRow2();
-		wait_us(250);
+		while (keypad[1][0] == 0 && keypad[1][1] == 0 && keypad[1][2] == 0
+				&& keypad[1][3] == 0) {
+			setRow2();
+			wait_us(250);
 
-		if (((FIO0PIN >> 17) & 0x01) == 1) {
-			if (keypad[1][0] == 0) {
-				slowClickDisp();
-				wait_us(2000000);
-				memset(keypad[1], 0, sizeof(keypad[1]));
-				keypad[1][0] = 1;
+			if (((FIO0PIN >> 17) & 0x01) == 1) {
+				if (keypad[1][0] == 0) {
+					slowClickDisp();
+					wait_us(2000000);
+					memset(keypad[1], 0, sizeof(keypad[1]));
+					keypad[1][0] = 1;
+				}
+				wait_us(50000);
+			} else if (((FIO0PIN >> 15) & 0x01) == 1) {
+				if (keypad[1][1] == 0) {
+					normalClickDisp();
+					wait_us(2000000);
+					memset(keypad[1], 0, sizeof(keypad[1]));
+					keypad[1][1] = 1;
+				}
+				wait_us(50000);
+			} else if (((FIO0PIN >> 16) & 0x01) == 1) {
+				if (keypad[1][2] == 0) {
+					fastClickDisp();
+					wait_us(2000000);
+					memset(keypad[1], 0, sizeof(keypad[1]));
+					keypad[1][2] = 1;
+				}
+				wait_us(50000);
+			} else if (((FIO0PIN >> 23) & 0x01) == 1) {
+				if (keypad[1][3] == 0) {
+					noClickDisp();
+					wait_us(2000000);
+					memset(keypad[2], 0, sizeof(keypad[2]));
+					keypad[1][3] = 1;
+				}
+				wait_us(50000);
 			}
-			wait_us(50000);
-		} else if (((FIO0PIN >> 15) & 0x01) == 1) {
-			if (keypad[1][1] == 0) {
-				normalClickDisp();
-				wait_us(2000000);
-				memset(keypad[1], 0, sizeof(keypad[1]));
-				keypad[1][1] = 1;
-			}
-			wait_us(50000);
-		} else if (((FIO0PIN >> 16) & 0x01) == 1) {
-			if (keypad[1][2] == 0) {
-				fastClickDisp();
-				wait_us(2000000);
-				memset(keypad[1], 0, sizeof(keypad[1]));
-				keypad[1][2] = 1;
-			}
-			wait_us(50000);
-		} else if (((FIO0PIN >> 23) & 0x01) == 1) {
-			if (keypad[1][3] == 0) {
-				noClickDisp();
-				wait_us(2000000);
-				memset(keypad[2], 0, sizeof(keypad[2]));
-				keypad[1][3] = 1;
-			}
-			wait_us(50000);
 		}
 	}
-
 	wait_us(50000);
 	rowReset();
 	wait_us(250);
@@ -276,11 +296,15 @@ void checkRow2(void) {
  */
 void checkRow3(void) {
 
-	while (keypad[2][0] == 0 && keypad[2][1] == 0) {
+	if (keypad[2][1] == 0 || keypad[2][1] == 1) {
 		editorDisp();
 		wait_us(2000000);
 		initialPrompt();
-		wait_us(2000000);
+		keypad[2][1] = 0;
+	}
+
+	while (keypad[2][0] == 0 && keypad[2][1] == 0) {
+
 		setRow3();
 		wait_us(250);
 
@@ -300,7 +324,11 @@ void checkRow3(void) {
 				// keep track of the fact that we are in chord playing mode
 				keypad[2][1] = 1;
 				playChordsOpt();
-				resetAllSel();
+				keypad[0][0] = 1;
+				keypad[0][1] = 1;
+				keypad[0][2] = 1;
+				keypad[2][1] = 1;
+				keypad[3][0] = 0;
 			}
 			wait_us(50000);
 		} else if (((FIO0PIN >> 16) & 0x01) == 1) {
@@ -336,6 +364,7 @@ void checkRow4(void) {
 			resetOpt();
 			timer3Stop();
 			configT2MR3(0);
+			keypad[3][0] = 1;
 		}
 		wait_us(50000);
 	}
