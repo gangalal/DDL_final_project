@@ -1,71 +1,66 @@
-/*
- ===============================================================================
- Name        : FinalProject.c
- Author      : $(author)
- Version     :
- Copyright   : $(copyright)
- Description : main definition
- ===============================================================================
- */
-
 #ifdef __USE_CMSIS
 #include "LPC17xx.h"
 #endif
 
 #include <cr_section_macros.h>
 
-#include <stdio.h>
-#include <math.h>
 #include "registerDef.h"
-#include "Util.h"
-#include "timer.h"
-#include "match2.h"
-
-
-void configMIDI() {
-	PCONP |= (1 << 3); //on reset UART is enable
-
-	PCLKSEL0 &= ~(1 << 6);
-	PCLKSEL0 &= ~(1 << 7);	// set UART to 1 MHz
-
-	U0LCR |= (1 << 7); //DLAB = 1 enable DLAB
-	U0DLL = 2;	// set baud rate
-	U0DLM = 0;
-
-	U0FCR |= (1 << 0);	// enable FIFO
-
-	PINSEL0 |= (1 << 6);
-	PINSEL0 &= ~(1 << 7);
-
-	//skipped interrupts
-	U0FCR |= (1 << 2);	// clear TX FIFO
-	U0FCR |= (1 << 1);	// clear RX FIFO
-
-	U0LCR |= (1 << 0);
-	U0LCR |= (1 << 1);	// select word length: 8-bit
-	U0LCR &= ~(1 << 2); // 1 stop bit
-
-	// U0FCR &= ~(1 << 6);
-	// U0FCR |= (1 << 7);	// These two bits determine 8 bits characters to receive
-
-	U0LCR &= ~(1 << 7); // needs to clear
-}
-
-
+#include "final.h"
 
 int main(void) {
-	PINSEL1 &= ~(1 << 20);
-	PINSEL1 |= (1 << 21);	// enable AOUT pins
+
+	PINSEL1 = (1 << 21) | (0 << 20); 	// enable AOUT pins
+
+	timer0Init();
+	timer2Init();
+	timer3Init();
+	timer2Stop();
+	timer3Stop();
+
+	I2CInit();
+
+	lcdInit();
+	LCDinitChar();
+
+	keypadInit();
+
 	configMIDI();
 
+	U0LCR &= ~(1 << 7);
+
+	/*
+	 * Test welcome display
+	 */
+	welcomeDisp();
+	wait_us(5000000);
+
+	//configT2Chord(0,0);
+
 	while (1) {
-		U0LCR &= ~(1 << 7); // must be zero to access RBR
-		if (U0RBR == 0x3c) {
-			printf("Note on! %x\n", U0RBR);
-			configT2MR3(261);
+
+		// begin initial routine
+		checkRow3();
+
+		// select click track
+		checkRow2();
+
+		// play click track based on user selection from pre-recording routine
+		if (keypad[1][0] == 1) {
+			configT3MR0(2);
+		} else if (keypad[1][1] == 1) {
+			configT3MR0(3);
+		} else if (keypad[1][2] == 1) {
+			configT3MR0(4);
+		} else {
+			timer3Stop();
 		}
 
+		// record song; reset keypad selections
+		recordOpt();
 
-		}
+		// User can select playback, save, edit, or reset
+		checkRow1();
+	}
+
 	return 0;
 }

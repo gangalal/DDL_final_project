@@ -1,33 +1,35 @@
-/*
- * match2.h
- *
- *  Created on: Nov 14, 2019
- *      Author: lama0003
- */
-#include "registerDef.h"
-#include "timer.h"
-
-#ifndef MATCH2_H_
-#define MATCH2_H_
-
+#include "final.h"
 
 /**
  * Start Timer 2
  */
 static inline void timer2Start() {
-	T2TCR |= (1 << 0);
-}
 
+	T2TCR |= (1 << 0);
+
+}
 
 /**
  * Reset Timer 2
  */
 static inline void timer2Reset() {
+
 	T2TCR |= (1 << 1);
 	while (T2TC != 0) {
 		// wait until timer has changed
 	}
-	T2TCR &= ~(1 << 1);	//
+
+	T2TCR &= ~(1 << 1);
+
+}
+
+/*
+ * Stop Timer 0
+ */
+void timer2Stop() {
+
+	T2TCR &= ~(1 << 0);
+
 }
 
 /**
@@ -43,25 +45,17 @@ void timer2Init() {
 	T2EMR |= (3 << 10); // Toggle on match EMC3
 	T2CTCR &= ~(1 << 0);
 	T2CTCR &= ~(1 << 1);
-	timer2Start();
+
 }
 
-
 /**
- * Configure Timer 2 for frequency generation
+ * Configure Timer 2 for square wave generation
  */
 void configT2MR3(int freq) {
-	timer0Start();
+	timer2Start();
 	timer0Reset();			// Reset Timer 0
 	T2MR3 = (1000000 / (2 * freq));	// load T2MR3 with match value based on frequency PCLK/(2*freq)
 	timer2Reset();
-	while (timer0Read_us() < 2000000.0) {
-		int aout = (1 - (timer0Read_us() / 2000000.0)) * 1023.0;
-		DACR = aout << 6;
+	while (timer0Read_us() < 100000.0) {
 	}
 }
-
-
-
-
-#endif /* MATCH2_H_ */
